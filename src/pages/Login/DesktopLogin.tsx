@@ -86,10 +86,6 @@ export default function DesktopLogin() {
     getPermission()
   );
 
-  const handleEnterClick = () => {
-    navigate("/tasks");
-  };
-
   const fetchData = async ({ email, password }: ILogin) => {
     await LoginService.login(email, password)
       .then(() => navigate("/tasks"))

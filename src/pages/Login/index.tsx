@@ -18,6 +18,7 @@ export const StyledFormControl = styled(FormControl)({
 
 const LoginPage = () => {
   const mediaSize = useMediaSize();
+
   return <>{mediaSize.isMobile ? <MobileLogin /> : <DesktopLogin />}</>;
 };
 
