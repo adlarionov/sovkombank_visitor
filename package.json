@@ -1,0 +1,55 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc && vite build  --force",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "generate-pwa-assets": "pwa-assets-generator"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.16",
+    "@mui/material": "^5.14.16",
+    "@pbe/react-yandex-maps": "^1.2.5",
+    "axios": "^1.6.1",
+    "formik": "^2.4.5",
+    "normalize.css": "^8.0.1",
+    "ofetch": "^1.3.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-id-generator": "^3.0.2",
+    "react-router-dom": "^6.18.0",
+    "react-swipeable-views": "^0.14.0",
+    "react-yandex-maps": "^4.6.0",
+    "yup": "^1.3.2"
+  },
+  "devDependencies": {
+    "@mui/x-charts": "^6.18.0",
+    "@types/react": "^18.2.34",
+    "@types/react-dom": "^18.2.7",
+    "@types/react-swipeable-views": "^0.13.5",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vite-pwa/assets-generator": "^0.0.10",
+    "@vitejs/plugin-react-swc": "^3.3.2",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vite-plugin-pwa": "^0.16.6"
+  },
+  "overrides": {
+    "react-swipeable-views": {
+      "react": "^18.2.0"
+    },
+    "react-yandex-maps": {
+      "react": "^18.2.0"
+    }
+  }
+}
