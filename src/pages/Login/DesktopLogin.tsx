@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Box, Switch, styled } from "@mui/material";
+import { Box, Switch, TextField, Typography, styled } from "@mui/material";
 
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Button from "@mui/material/Button";
@@ -9,9 +9,14 @@ import { palette } from "../../shared/config/palette";
 import { theme } from "../../app/providers/ThemeProvider/theme";
 import { typographyDesktop } from "../../shared/config/typography";
 
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import ILogin from "../../shared/interfaces/ILogin";
+
 import SovcomBankLogo from "../../shared/components/Icons/SovcomBankLogo";
 import { StyledFormControl, StyledFormHelperText } from ".";
 import { getPermission, setPermission } from "../../shared/hooks/usePermission";
+import LoginService from "../../shared/services/loginService";
 
 const LoginLayoutDesktop = styled("div")({
   background: theme.palette.background.default,
@@ -20,7 +25,7 @@ const LoginLayoutDesktop = styled("div")({
   alignItems: "center",
 });
 
-export const LoginFormDesktop = styled("div")({
+export const LoginFormDesktop = styled("form")({
   background: theme.palette.common.white,
   width: "38.125rem",
   height: "31.75rem",
@@ -44,7 +49,7 @@ export const TypographyH1Desktop = styled("h1")({
   width: "24.5625rem",
 });
 
-const StyledInputDesktop = styled(OutlinedInput)({
+const StyledInputDesktop = styled(TextField)({
   width: "21.875rem",
   borderRadius: "0.625rem",
   border: ` 1px solid ${palette.secondary.borderGrey}`,
@@ -64,78 +69,98 @@ const StyledButtonDesktop = styled(Button)({
   },
 });
 
+const LoginSchema = Yup.object<ILogin>({
+  email: Yup.string()
+    .email("Введите почту - ivanov.a.f@sovkom.bank")
+    .min(5, "Почта не может быть меньше 5 символов")
+    .required("Почта обязательна"),
+  password: Yup.string()
+    .min(5, "Пароль должен быть больше 5 символов")
+    .required("Пароль обязателен"),
+});
+
 export default function DesktopLogin() {
   const navigate = useNavigate();
-  const [error] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [_, setData] = useState<ILogin>();
   const [permission, setPermissionState] = useState<string | null>(
     getPermission()
   );
-
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
 
   const handleEnterClick = () => {
     navigate("/tasks");
   };
 
+  const fetchData = async ({ email, password }: ILogin) => {
+    await LoginService.login(email, password)
+      .then(() => navigate("/tasks"))
+      .catch((error) => alert(error));
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      email: "ivanov.a.f@sovkom.bank",
+      password: "testpass48",
+    },
+    validationSchema: LoginSchema,
+    onSubmit: (values, { resetForm }) => {
+      setData(values);
+      resetForm();
+      fetchData(values);
+    },
+  });
+
   const handleOnChange = () => {
     if (permission === "manager") {
       setPermission("visitor");
       setPermissionState("visitor");
+      window.location.reload();
     } else if (permission === "visitor") {
       setPermission("manager");
       setPermissionState("manager");
     }
-    window.location.reload();
   };
 
   return (
     <LoginLayoutDesktop>
-      <LoginFormDesktop>
+      <LoginFormDesktop onSubmit={formik.handleSubmit}>
         <SovcomBankLogoDesktop />
         <TypographyH1Desktop>Вход в Совкомком Визитер</TypographyH1Desktop>
-        <StyledFormControl error={error}>
-          <StyledInputDesktop
-            value={email}
-            onChange={handleEmailChange}
-            placeholder="Корпоративная почта"
-            error={error}
+        <StyledInputDesktop
+          id="email"
+          name="email"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          placeholder="Корпоративная почта"
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={
+            <Typography component={"p"}>
+              {formik.touched.email && formik.errors.email}
+            </Typography>
+          }
+        />
+        <StyledInputDesktop
+          value={formik.values.password}
+          id="password"
+          name="password"
+          type="password"
+          onChange={formik.handleChange}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          placeholder="Пароль"
+          helperText={
+            <Typography>
+              {formik.touched.password && formik.errors.password}
+            </Typography>
+          }
+        />
+        <Box margin="0 auto">
+          <span>Курьер</span>
+          <Switch
+            checked={permission === "manager"}
+            onChange={handleOnChange}
           />
-          {error ? (
-            <StyledFormHelperText id="my-helper-text">
-              Введена неверная почта
-            </StyledFormHelperText>
-          ) : null}
-        </StyledFormControl>
-        <StyledFormControl error={error}>
-          <StyledInputDesktop
-            value={password}
-            type="password"
-            onChange={handlePasswordChange}
-            placeholder="Пароль"
-          />
-          {error ? (
-            <StyledFormHelperText id="my-helper-text">
-              Введён неверный пароль
-            </StyledFormHelperText>
-          ) : null}
-          <Box margin="0 auto">
-            <span>Курьер</span>
-            <Switch
-              checked={permission === "manager"}
-              onChange={handleOnChange}
-            />
-            <span>Менеджер</span>
-          </Box>
-        </StyledFormControl>
-        <StyledButtonDesktop onClick={handleEnterClick}>
+          <span>Менеджер</span>
+        </Box>
+        <StyledButtonDesktop type="submit">
           Войти
         </StyledButtonDesktop>
         {/*Пока что здесь будет заглушка и переход сразу на стартовую страницу */}
