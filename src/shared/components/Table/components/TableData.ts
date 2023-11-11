@@ -91,7 +91,7 @@ export interface ITableDataAddresses {
 
 export const tableDataEmployees = [
   {
-    id: "1",
+    number: "1",
     credential: "Дерягин Никита Владимирович",
     address: "Краснодар, Красная, д. 139",
     grade: "Сеньёр",

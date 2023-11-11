@@ -56,10 +56,10 @@ export default function DepartmentChangeForm({
   const formik = useFormik<ITableDataAddresses>({
     initialValues: {
       address: department ? department.address : "",
-      id: department ? department.id : 0,
-      approved_amount: department ? department.approved_amount : 0,
-      given_amount: department ? department.given_amount : 0,
-      days_passed: department ? department.days_passed : 0,
+      id: department ? department.id : "",
+      approved_amount: department ? department.approved_amount : "",
+      given_amount: department ? department.given_amount : "",
+      days_passed: department ? department.days_passed : "",
       when_connected: department ? department.when_connected : "",
       is_delivered: department ? department.is_delivered : "",
     },
