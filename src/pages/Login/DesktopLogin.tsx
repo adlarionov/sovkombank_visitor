@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Box, Switch, TextField, Typography, styled } from "@mui/material";
 
-import OutlinedInput from "@mui/material/OutlinedInput";
 import Button from "@mui/material/Button";
 //пока что не понял как полность кастомизировать палитру из-за этого пока что так оставил
 import { palette } from "../../shared/config/palette";
@@ -14,7 +13,6 @@ import * as Yup from "yup";
 import ILogin from "../../shared/interfaces/ILogin";
 
 import SovcomBankLogo from "../../shared/components/Icons/SovcomBankLogo";
-import { StyledFormControl, StyledFormHelperText } from ".";
 import { getPermission, setPermission } from "../../shared/hooks/usePermission";
 import LoginService from "../../shared/services/loginService";
 
