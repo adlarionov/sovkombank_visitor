@@ -13,7 +13,6 @@ import * as Yup from "yup";
 import ILogin from "../../shared/interfaces/ILogin";
 import Typography from "@mui/material/Typography";
 import Switch from "@mui/material/Switch";
-import LoginService from "../../shared/services/loginService";
 import { getPermission, setPermission } from "../../shared/hooks/usePermission";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
@@ -90,28 +89,28 @@ const LoginSchema = Yup.object<ILogin>({
 
 export default function MobileLogin() {
   const [_, setData] = useState<ILogin>();
-  const [userId, setUserId] = useState<string>();
+  const [userId, __] = useState<string>();
   const [loginError, setLoginError] = useState<boolean>(false);
   const [permission, setPermissionState] = useState<string | null>(
     getPermission()
   );
 
-  const fetchData = async ({ email, password }: ILogin) => {
-    await LoginService.login(email, password)
-      .then((resp) => {
-        setUserId(resp.id.toString());
-        if (permission === "manager") {
-          navigate("/manager/dashboard");
-        } else {
-          navigate("/tasks");
-        }
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoginError(true);
-      });
-  };
+  // const fetchData = async ({ email, password }: ILogin) => {
+  //   await LoginService.login(email, password)
+  //     .then((resp) => {
+  //       setUserId(resp.id.toString());
+  //       if (permission === "manager") {
+  //         navigate("/manager/dashboard");
+  //       } else {
+  //         navigate("/tasks");
+  //       }
+  //       window.location.reload();
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       setLoginError(true);
+  //     });
+  // };
 
   useEffect(() => {
     if (userId) {

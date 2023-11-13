@@ -14,7 +14,6 @@ import ILogin from "../../shared/interfaces/ILogin";
 
 import SovcomBankLogo from "../../shared/components/Icons/SovcomBankLogo";
 import { getPermission, setPermission } from "../../shared/hooks/usePermission";
-import LoginService from "../../shared/services/loginService";
 
 const LoginLayoutDesktop = styled("div")({
   background: theme.palette.background.default,
@@ -85,19 +84,19 @@ export default function DesktopLogin() {
     getPermission()
   );
 
-  const fetchData = async ({ email, password }: ILogin) => {
-    await LoginService.login(email, password)
-      .then((resp) => {
-        if (permission === "manager") {
-          navigate("/manager/dashboard");
-        } else {
-          navigate("/tasks");
-        }
-        window.location.reload();
-        localStorage.setItem("userId", resp.id.toString());
-      })
-      .catch((error) => alert(error));
-  };
+  // const fetchData = async ({ email, password }: ILogin) => {
+  //   await LoginService.login(email, password)
+  //     .then((resp) => {
+  //       if (permission === "manager") {
+  //         navigate("/manager/dashboard");
+  //       } else {
+  //         navigate("/tasks");
+  //       }
+  //       window.location.reload();
+  //       localStorage.setItem("userId", resp.id.toString());
+  //     })
+  //     .catch((error) => alert(error));
+  // };
 
   const formik = useFormik({
     initialValues: {
