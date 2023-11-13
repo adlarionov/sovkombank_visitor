@@ -17,6 +17,8 @@ import Switch from "@mui/material/Switch";
 import LoginService from "../../shared/services/loginService";
 import { getPermission, setPermission } from "../../shared/hooks/usePermission";
 import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 
 const LoginLayoutMobile = styled("div")({
   background: palette.background.tertiary,
@@ -89,14 +91,18 @@ const LoginSchema = Yup.object<ILogin>({
 export default function MobileLogin() {
   const navigate = useNavigate();
   const [_, setData] = useState<ILogin>();
+  const [loginError, setLoginError] = useState<boolean>(false);
   const [permission, setPermissionState] = useState<string | null>(
     getPermission()
   );
 
   const fetchData = async ({ email, password }: ILogin) => {
     await LoginService.login(email, password)
-      .then(() => navigate("/tasks"))
-      .catch((error) => alert(error));
+      .then((resp) => console.log(resp))
+      .catch((error) => {
+        console.error(error);
+        setLoginError(true);
+      });
   };
 
   const handleOnChange = () => {
@@ -107,6 +113,7 @@ export default function MobileLogin() {
       setPermission("manager");
       setPermissionState("manager");
     }
+    window.location.reload();
   };
 
   const formik = useFormik({
@@ -116,6 +123,7 @@ export default function MobileLogin() {
     },
     validationSchema: LoginSchema,
     onSubmit: (values, { resetForm }) => {
+      console.log(values);
       setData(values);
       resetForm();
       fetchData(values);
@@ -124,6 +132,14 @@ export default function MobileLogin() {
 
   return (
     <LoginLayoutMobile>
+      <Snackbar
+        open={loginError}
+        onClose={() => setLoginError(false)}
+        autoHideDuration={2000}
+        anchorOrigin={{ horizontal: "center", vertical: "top" }}
+      >
+        <Alert severity="error">Что-то пошло не так</Alert>
+      </Snackbar>
       <LoginFormMobile onSubmit={formik.handleSubmit}>
         <TypographyH1Mobile>
           Вход в Совкомбанк Визитер
@@ -137,7 +153,7 @@ export default function MobileLogin() {
           placeholder="Корпоративная почта"
           error={formik.touched.email && Boolean(formik.errors.email)}
           helperText={
-            <Typography component={"p"}>
+            <Typography>
               {formik.touched.email && formik.errors.email}
             </Typography>
           }
@@ -146,7 +162,7 @@ export default function MobileLogin() {
           value={formik.values.password}
           id="password"
           name="password"
-          type="password"
+          // type="password"
           onChange={formik.handleChange}
           error={formik.touched.password && Boolean(formik.errors.password)}
           placeholder="Пароль"

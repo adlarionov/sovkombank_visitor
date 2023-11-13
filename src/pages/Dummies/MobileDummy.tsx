@@ -28,7 +28,7 @@ const MobileDummy = () => {
           fontSize={"1rem"}
           marginTop="1rem"
         >
-          Авторизуйтесь, используя ноутбук или персовнонаьный компьютер
+          Авторизуйтесь, используя ноутбук или персональный компьютер
         </Typography>
         <ArrowIcon
           sx={{ marginLeft: "18rem", zIndex: "2", position: "absolute" }}
