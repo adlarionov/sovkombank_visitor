@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/system";
 
 import TextField from "@mui/material/TextField";
@@ -89,7 +88,6 @@ const LoginSchema = Yup.object<ILogin>({
 });
 
 export default function MobileLogin() {
-  const navigate = useNavigate();
   const [_, setData] = useState<ILogin>();
   const [loginError, setLoginError] = useState<boolean>(false);
   const [permission, setPermissionState] = useState<string | null>(
