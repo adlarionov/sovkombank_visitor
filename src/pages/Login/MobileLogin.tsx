@@ -141,7 +141,14 @@ export default function MobileLogin() {
       console.log(values);
       setData(values);
       resetForm();
-      fetchData(values);
+      // fetchData(values);
+      if (permission === "manager") {
+        navigate("/manager/dashboard");
+      } else {
+        navigate("/tasks");
+      }
+      window.location.reload();
+      localStorage.setItem("userId", "1234");
     },
   });
 
