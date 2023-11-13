@@ -17,7 +17,6 @@ function App() {
       } else {
         setPermission("manager");
       }
-      window.location.reload();
     }
   }, [isMobile]);
 

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Switch, TextField, Typography, styled } from "@mui/material";
 
 import Button from "@mui/material/Button";
@@ -79,6 +79,7 @@ const LoginSchema = Yup.object<ILogin>({
 
 export default function DesktopLogin() {
   const navigate = useNavigate();
+  const isAuthrized = localStorage.getItem("userId");
   const [_, setData] = useState<ILogin>();
   const [permission, setPermissionState] = useState<string | null>(
     getPermission()
@@ -86,7 +87,15 @@ export default function DesktopLogin() {
 
   const fetchData = async ({ email, password }: ILogin) => {
     await LoginService.login(email, password)
-      .then(() => navigate("/tasks"))
+      .then((resp) => {
+        if (permission === "manager") {
+          navigate("/manager/dashboard");
+        } else {
+          navigate("/tasks");
+        }
+        window.location.reload();
+        localStorage.setItem("userId", resp.id.toString());
+      })
       .catch((error) => alert(error));
   };
 
@@ -107,12 +116,23 @@ export default function DesktopLogin() {
     if (permission === "manager") {
       setPermission("visitor");
       setPermissionState("visitor");
-      window.location.reload();
     } else if (permission === "visitor") {
       setPermission("manager");
       setPermissionState("manager");
     }
   };
+
+  useEffect(() => {
+    if (isAuthrized) {
+      if (permission === "manager") {
+        navigate("/manager/dashboard");
+      } else {
+        navigate("/tasks");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, [isAuthrized, navigate, permission]);
 
   return (
     <LoginLayoutDesktop>
@@ -154,9 +174,7 @@ export default function DesktopLogin() {
           />
           <span>Менеджер</span>
         </Box>
-        <StyledButtonDesktop type="submit">
-          Войти
-        </StyledButtonDesktop>
+        <StyledButtonDesktop type="submit">Войти</StyledButtonDesktop>
         {/*Пока что здесь будет заглушка и переход сразу на стартовую страницу */}
       </LoginFormDesktop>
     </LoginLayoutDesktop>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/system";
 
 import TextField from "@mui/material/TextField";
@@ -18,6 +18,7 @@ import { getPermission, setPermission } from "../../shared/hooks/usePermission";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import { useNavigate } from "react-router-dom";
 
 const LoginLayoutMobile = styled("div")({
   background: palette.background.tertiary,
@@ -89,6 +90,7 @@ const LoginSchema = Yup.object<ILogin>({
 
 export default function MobileLogin() {
   const [_, setData] = useState<ILogin>();
+  const [userId, setUserId] = useState<string>();
   const [loginError, setLoginError] = useState<boolean>(false);
   const [permission, setPermissionState] = useState<string | null>(
     getPermission()
@@ -96,12 +98,28 @@ export default function MobileLogin() {
 
   const fetchData = async ({ email, password }: ILogin) => {
     await LoginService.login(email, password)
-      .then((resp) => console.log(resp))
+      .then((resp) => {
+        setUserId(resp.id.toString());
+        if (permission === "manager") {
+          navigate("/manager/dashboard");
+        } else {
+          navigate("/tasks");
+        }
+        window.location.reload();
+      })
       .catch((error) => {
         console.error(error);
         setLoginError(true);
       });
   };
+
+  useEffect(() => {
+    if (userId) {
+      localStorage.setItem("userId", userId.toString());
+    }
+  }, [userId]);
+
+  const navigate = useNavigate();
 
   const handleOnChange = () => {
     if (permission === "manager") {
@@ -111,7 +129,6 @@ export default function MobileLogin() {
       setPermission("manager");
       setPermissionState("manager");
     }
-    window.location.reload();
   };
 
   const formik = useFormik({

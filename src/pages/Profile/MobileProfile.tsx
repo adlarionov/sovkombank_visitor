@@ -52,7 +52,13 @@ export default function MobileProfile() {
 
   return (
     <ProfileLayoutMobile>
-      <ButtonStyled color="inherit" onClick={() => navigate("/login")}>
+      <ButtonStyled
+        color="inherit"
+        onClick={() => {
+          navigate("/login");
+          localStorage.removeItem("userId");
+        }}
+      >
         <LogoutRoundedIconStyled />
       </ButtonStyled>
       <Box

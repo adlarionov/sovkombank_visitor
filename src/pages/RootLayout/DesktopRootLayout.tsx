@@ -178,7 +178,10 @@ export default function DesktopRootLayout() {
                   Лера
                 </Typography>
                 <LogoutRoundedIconStyled
-                  onClick={() => navigate("/login")}
+                  onClick={() => {
+                    navigate("/login")
+                    localStorage.removeItem("userId");
+                  }}
                   sx={{ marginLeft: "1.12rem" }}
                 />
               </Stack>
