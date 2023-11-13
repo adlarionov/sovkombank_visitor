@@ -3,7 +3,7 @@
 import { FetchOptions, ofetch } from "ofetch";
 
 const defaultOptions: FetchOptions = {
-  baseURL: "http://94.139.254.148",
+  baseURL: "https://94.139.254.148",
 };
 
 function createHttpClient(options?: FetchOptions) {
