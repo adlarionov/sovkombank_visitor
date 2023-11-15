@@ -1,5 +1,4 @@
 export function setTime() {
-  console.log("here");
   localStorage.setItem("timerStart", JSON.stringify(Date.now()));
 }
 

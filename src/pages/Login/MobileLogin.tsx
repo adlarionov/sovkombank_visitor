@@ -18,6 +18,8 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import { useNavigate } from "react-router-dom";
+import LoginService from "../../shared/services/loginService";
+import { setUser } from "../../shared/hooks/useUser";
 
 const LoginLayoutMobile = styled("div")({
   background: palette.background.tertiary,
@@ -89,28 +91,29 @@ const LoginSchema = Yup.object<ILogin>({
 
 export default function MobileLogin() {
   const [_, setData] = useState<ILogin>();
-  const [userId, __] = useState<string>();
+  const [userId, setUserId] = useState<string>();
   const [loginError, setLoginError] = useState<boolean>(false);
   const [permission, setPermissionState] = useState<string | null>(
     getPermission()
   );
 
-  // const fetchData = async ({ email, password }: ILogin) => {
-  //   await LoginService.login(email, password)
-  //     .then((resp) => {
-  //       setUserId(resp.id.toString());
-  //       if (permission === "manager") {
-  //         navigate("/manager/dashboard");
-  //       } else {
-  //         navigate("/tasks");
-  //       }
-  //       window.location.reload();
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       setLoginError(true);
-  //     });
-  // };
+  const fetchData = async ({ email, password }: ILogin) => {
+    await LoginService.login(email, password)
+      .then((resp) => {
+        setUserId(resp.id.toString());
+        setUser(resp.id);
+        if (permission === "manager") {
+          navigate("/manager/dashboard");
+        } else {
+          navigate("/tasks");
+        }
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoginError(true);
+      });
+  };
 
   useEffect(() => {
     if (userId) {
@@ -140,14 +143,14 @@ export default function MobileLogin() {
       console.log(values);
       setData(values);
       resetForm();
-      // fetchData(values);
-      if (permission === "manager") {
-        navigate("/manager/dashboard");
-      } else {
-        navigate("/tasks");
-      }
-      window.location.reload();
-      localStorage.setItem("userId", "1234");
+      fetchData(values);
+      // if (permission === "manager") {
+      //   navigate("/manager/dashboard");
+      // } else {
+      //   navigate("/tasks");
+      // }
+      // window.location.reload();
+      // localStorage.setItem("userId", "1234");
     },
   });
 

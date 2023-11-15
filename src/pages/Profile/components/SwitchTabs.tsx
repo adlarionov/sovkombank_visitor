@@ -67,7 +67,7 @@ const TypographyTextStyled = styled(Typography)({
   ...typographyMobile.body1,
 });
 
-export default function SwitchTabs() {
+export default function SwitchTabs({ kpiValue }: { kpiValue: number }) {
   const [tabIndex, setTabIndex] = useState<TTab>("month");
   const [data, setData] = useState<typeof ProfileData>();
 
@@ -126,7 +126,7 @@ export default function SwitchTabs() {
               ]}
             />
             <Box textAlign={"center"} width="5.125rem" margin={"-125px 140px"}>
-              <TypographyH1Styled>{data?.month[0].value}%</TypographyH1Styled>
+              <TypographyH1Styled>{kpiValue || 0}%</TypographyH1Styled>
               <TypographyTextStyled>
                 {data?.month[0].value > 80
                   ? "Успешно выполнено!"
@@ -153,7 +153,7 @@ export default function SwitchTabs() {
               ]}
             />
             <Box textAlign={"center"} width="5.125rem" margin={"-125px 140px"}>
-              <TypographyH1Styled>{data.quarter[0].value}%</TypographyH1Styled>
+              <TypographyH1Styled>{kpiValue || 0}%</TypographyH1Styled>
               <TypographyTextStyled>
                 {data.quarter[0].value > 80
                   ? "Успешно выполнено!"

@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import LoopIcon from "@mui/icons-material/Loop";
 
-import { styled } from "@mui/material";
+import { Skeleton, styled } from "@mui/material";
 import { palette } from "../../shared/config/palette";
 import { typographyMobile } from "../../shared/config/typography";
 
@@ -16,6 +16,11 @@ import Chart from "../../shared/assets/chart.png";
 import Running from "../../shared/assets/running.png";
 import Trophy from "../../shared/assets/trophy.png";
 import { useNavigate } from "react-router-dom";
+import { getUser, removeUser } from "../../shared/hooks/useUser";
+import { useEffect, useState } from "react";
+import WorkersService from "../../shared/services/workersService";
+import IWorker from "../../shared/interfaces/IWorker";
+import useSWR, { Fetcher } from "swr";
 
 const ProfileLayoutMobile = styled("div")({
   background: palette.background.tertiary,
@@ -47,8 +52,12 @@ const TypographyTextStyled = styled(Typography)({
   ...typographyMobile.body1,
 });
 
+const getUserData: () => Promise<IWorker> = async () =>
+  await WorkersService.getWorkersById(getUser());
+
 export default function MobileProfile() {
   const navigate = useNavigate();
+  const { data, error, isLoading } = useSWR<IWorker>(getUser(), getUserData);
 
   return (
     <ProfileLayoutMobile>
@@ -56,7 +65,7 @@ export default function MobileProfile() {
         color="inherit"
         onClick={() => {
           navigate("/login");
-          localStorage.removeItem("userId");
+          removeUser();
         }}
       >
         <LogoutRoundedIconStyled />
@@ -78,12 +87,23 @@ export default function MobileProfile() {
           marginBottom="2rem"
         >
           <Box component="img" src="/images/profile.png" />
-          <TypographyH1Styled>Данила</TypographyH1Styled>
-          <BadgeStyled
-            badgeContent="Мидл-специалист"
-            status="warning"
-            isIcon={false}
-          />
+          {data ? (
+            <>
+              <TypographyH1Styled>
+                {data.name.split(" ")[1]}
+              </TypographyH1Styled>
+              <BadgeStyled
+                badgeContent={`${data.grade}-специалист`}
+                status="warning"
+                isIcon={false}
+              />
+            </>
+          ) : (
+            <>
+              <Skeleton animation="wave" width={100} height={40} />
+              <Skeleton animation="wave" width={150} height={30} />
+            </>
+          )}
         </Box>
         <Box
           className="KPI Card"
@@ -103,7 +123,7 @@ export default function MobileProfile() {
           >
             Ваш KPI
           </TypographyH2Styled>
-          <SwitchTabs />
+          {data ? <SwitchTabs kpiValue={data.kpi} /> : <Skeleton />}
           <Box
             display={"flex"}
             marginTop={"1.5rem"}

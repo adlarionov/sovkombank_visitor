@@ -121,7 +121,7 @@ export default function Tasks() {
   const [ymaps, setYmaps] = useState<any>();
 
   const mapState = {
-    center: [55.739625, 37.5412],
+    center: [44.98, 38.97],
     zoom: 12,
   };
 
@@ -129,10 +129,12 @@ export default function Tasks() {
 
   const getPoints = async () => {
     const poins = await PointService.getPoints();
-    console.log(poins)
+    console.log(poins);
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getPoints();
+  }, []);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -164,7 +166,8 @@ export default function Tasks() {
   };
 
   const addRoute = () => {
-    const pointA = currentLocation;
+    const pointA = [45.035603578464205, 38.970755839404184];
+    // const pointA = currentLocation;
     const pointB = selectedPoint;
 
     const multiRoute = new ymaps.multiRouter.MultiRoute(
@@ -172,7 +175,7 @@ export default function Tasks() {
         referencePoints: [pointA, pointB],
         params: {
           routingMode: "auto",
-          avoidTrafficJams: true,
+          avoidTrafficJams: true
         },
       },
       {
@@ -203,12 +206,15 @@ export default function Tasks() {
         <div>
           <YMaps
             query={{
-              apikey: "d5918306-ec3f-40ad-a705-0c3d36aa30e8",
+              apikey: "5e139f2a-31ef-4930-a854-0ca3f7aa5034",
               lang: "ru_RU",
             }}
           >
             <Map
-              defaultState={{ center: [55.75, 37.57], zoom: 13 }}
+              defaultState={{
+                center: [45.06, 38.98],
+                zoom: 11,
+              }}
               width={"100%"}
               height={"100vh"}
               modules={["multiRouter.MultiRoute"]}
@@ -217,13 +223,13 @@ export default function Tasks() {
               onLoad={saveYmap}
             >
               <GeolocationControl
-                options={{ position: { bottom: 180, right: 20 } }}
+                options={{ position: { top: 30, right: 20 } }}
               />
-              <ZoomControl options={{ position: { right: 20, bottom: 300 } }} />
+              <ZoomControl options={{ position: { right: 20, top: 100 } }} />
 
               <Placemark
                 modules={["geoObject.addon.balloon"]}
-                geometry={[55.75, 37.57]}
+                geometry={[45.06, 38.988]}
                 options={{ draggable: true }}
                 // properties={{
                 //   balloonContentBody: "Адрес такой-то",
@@ -233,7 +239,7 @@ export default function Tasks() {
 
               <Placemark
                 modules={["geoObject.addon.balloon"]}
-                geometry={[55.76, 37.58]}
+                geometry={[45.018, 39.024]}
                 options={{ draggable: true }}
                 // properties={{
                 //   balloonContentBody: "Адрес такой-то",
