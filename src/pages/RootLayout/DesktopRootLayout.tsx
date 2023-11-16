@@ -7,6 +7,7 @@ import {
   ListItemAvatar,
   ListItemIcon,
   ListItemText,
+  Skeleton,
   Stack,
   Typography,
   styled,
@@ -36,6 +37,11 @@ import { Outlet, useNavigate } from "react-router-dom";
 import DesktopDummy from "../Dummies/DesktopDummy";
 import { theme } from "../../app/providers/ThemeProvider/theme";
 import { getPermission } from "../../shared/hooks/usePermission";
+import IManager from "../../shared/interfaces/IManager";
+import ManagersService from "../../shared/services/managersService";
+import useSWR from "swr";
+import { getUser } from "../../shared/hooks/useUser";
+import RequestError from "../../shared/components/RequestError";
 
 const Drawer = styled(Box)`
   position: fixed;
@@ -99,10 +105,18 @@ const Link = React.forwardRef<HTMLAnchorElement, RouterLinkProps>(
   (itemProps, ref) => <RouterLink ref={ref} {...itemProps} role={undefined} />
 );
 
-export default function DesktopRootLayout() {
+const getManagerData: () => Promise<IManager> = async () =>
+  await ManagersService.getManagersById(2222);
 
-  const permissionRole = getPermission(); //это временная заглушка по пермиссии для пользователя
+export default function DesktopRootLayout() {
+  const permissionRole = getPermission();
   const navigate = useNavigate();
+  const { data, error, mutate } = useSWR(getUser(), getManagerData);
+
+  if (error) {
+    console.error(error);
+    return <RequestError errorDescription={error} reload={mutate} />;
+  }
 
   return (
     <div>
@@ -158,6 +172,8 @@ export default function DesktopRootLayout() {
                 >
                   <Avatar sx={{ background: theme.palette.common.white }}>
                     <Box
+                      component="img"
+                      alt={data && data.image_link}
                       sx={{
                         width: "2.5rem",
                         height: "2.5rem",
@@ -175,11 +191,15 @@ export default function DesktopRootLayout() {
                     fontWeight: 500,
                   }}
                 >
-                  Лера
+                  {data ? (
+                    data.name.split(" ")[1]
+                  ) : (
+                    <Skeleton animation="wave" width={100} height={40} />
+                  )}
                 </Typography>
                 <LogoutRoundedIconStyled
                   onClick={() => {
-                    navigate("/login")
+                    navigate("/login");
                     localStorage.removeItem("userId");
                   }}
                   sx={{ marginLeft: "1.12rem" }}

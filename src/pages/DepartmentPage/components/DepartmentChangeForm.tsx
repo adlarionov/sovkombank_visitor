@@ -13,6 +13,7 @@ import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useFormik } from "formik";
 import { ITableDataAddresses } from "../../../shared/components/Table/components/TableData";
 import PointService from "../../../shared/services/pointService";
+import axios from "axios";
 
 const StyledButton = styled(Button)({
   color: "black",
@@ -53,36 +54,48 @@ export default function DepartmentChangeForm({
 }) {
   const navigate = useNavigate();
 
+  const createDepartment = async (values: ITableDataAddresses) => {
+    const response = await PointService.addPoints(
+      values.id,
+      values.address,
+      values.when_connected,
+      values.is_delivered,
+      values.given_amount,
+      values.approved_amount,
+      values.days_passed
+    );
+    console.log(values, response);
+  };
+
+  const updateDepartment = async (values: ITableDataAddresses) => {
+    const response = await axios.put(
+      `http://94.139.254.148/points/update/${values.id}`,
+      values
+    );
+    // const response = await PointService.updatePointsById(
+    //   values.id,
+    //   values.address,
+    //   values.when_connected,
+    //   values.is_delivered,
+    //   values.given_amount,
+    //   values.approved_amount,
+    //   values.days_passed
+    // );
+    console.log(values, response);
+  };
+
   const formik = useFormik<ITableDataAddresses>({
     initialValues: {
       address: department ? department.address : "",
-      id: department ? department.id : "",
-      approved_amount: department ? department.approved_amount : "",
-      given_amount: department ? department.given_amount : "",
-      days_passed: department ? department.days_passed : "",
+      id: department ? department.id : 0,
+      approved_amount: department ? department.approved_amount : 0,
+      given_amount: department ? department.given_amount : 0,
+      days_passed: department ? department.days_passed : 0,
       when_connected: department ? department.when_connected : "",
       is_delivered: department ? department.is_delivered : "",
     },
     onSubmit: async (values, { resetForm }) => {
-      type === "create"
-        ? await PointService.addPoints(
-            Number(values.id),
-            values.address,
-            values.when_connected,
-            values.is_delivered,
-            Number(values.given_amount),
-            Number(values.approved_amount),
-            Number(values.days_passed)
-          )
-        : await PointService.updatePointsById(
-            Number(values.id),
-            values.address,
-            values.when_connected,
-            values.is_delivered,
-            Number(values.given_amount),
-            Number(values.approved_amount),
-            Number(values.days_passed)
-          );
+      type === "create" ? createDepartment(values) : updateDepartment(values);
       onSubmitForm(values);
       alert(JSON.stringify(values, null, 2));
       navigate("/manager/departments");
@@ -140,8 +153,8 @@ export default function DepartmentChangeForm({
             width={"100%"}
           >
             <OutlinedInput
-              id="number"
-              name="number"
+              id="id"
+              name="id"
               value={formik.values.id}
               onChange={formik.handleChange}
               sx={{ borderRadius: "0.625rem" }}
@@ -164,8 +177,8 @@ export default function DepartmentChangeForm({
           >
             <Select
               sx={{ borderRadius: "0.625rem" }}
-              id="date"
-              name="date"
+              id="when_connected"
+              name="when_connected"
               value={formik.values.when_connected}
               onChange={formik.handleChange}
             >
@@ -175,8 +188,8 @@ export default function DepartmentChangeForm({
             </Select>
             <Select
               sx={{ borderRadius: "0.625rem" }}
-              id="isDelivered"
-              name="isDelivered"
+              id="is_delivered"
+              name="is_delivered"
               value={formik.values.is_delivered}
               onChange={formik.handleChange}
             >
@@ -193,8 +206,8 @@ export default function DepartmentChangeForm({
             <OutlinedInput
               sx={{ borderRadius: "0.625rem" }}
               placeholder="Кол-во дней после выдачи последней карты"
-              id="amountDays"
-              name="amountDays"
+              id="days_passed"
+              name="days_passed"
               value={formik.values.days_passed}
               onChange={formik.handleChange}
             />
@@ -208,16 +221,16 @@ export default function DepartmentChangeForm({
             <OutlinedInput
               sx={{ borderRadius: "0.625rem" }}
               placeholder="Кол-во одобренных заявок"
-              id="amountApproved"
-              name="amountApproved"
+              id="approved_amount"
+              name="approved_amount"
               value={formik.values.approved_amount}
               onChange={formik.handleChange}
             />
             <OutlinedInput
               sx={{ borderRadius: "0.625rem" }}
               placeholder="Кол-во выданных карт"
-              id="amountCards"
-              name="amountCards"
+              id="given_amount"
+              name="given_amount"
               value={formik.values.given_amount}
               onChange={formik.handleChange}
             />

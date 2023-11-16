@@ -1,12 +1,11 @@
 import httpClient from "../api/httpClient";
-import axiosInstance from "../api/httpClient";
 import { ITableDataAddresses } from "../components/Table/components/TableData";
 
 async function getPoints(): Promise<ITableDataAddresses[]> {
   return httpClient.get("/points/get");
 }
 
-async function getPointsById(id: number) {
+async function getPointsById(id: number): Promise<ITableDataAddresses> {
   return httpClient.get(`/points/get/${id}`);
 }
 
@@ -51,7 +50,7 @@ async function addPoints(
   approved_amount: number,
   given_amount: number
 ) {
-  return axiosInstance.post("/points/add", {
+  return httpClient.post("/points/add", {
     body: {
       id,
       address,

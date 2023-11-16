@@ -17,10 +17,10 @@ import Running from "../../shared/assets/running.png";
 import Trophy from "../../shared/assets/trophy.png";
 import { useNavigate } from "react-router-dom";
 import { getUser, removeUser } from "../../shared/hooks/useUser";
-import { useEffect, useState } from "react";
 import WorkersService from "../../shared/services/workersService";
 import IWorker from "../../shared/interfaces/IWorker";
-import useSWR, { Fetcher } from "swr";
+import useSWR from "swr";
+import RequestError from "../../shared/components/RequestError";
 
 const ProfileLayoutMobile = styled("div")({
   background: palette.background.tertiary,
@@ -57,7 +57,12 @@ const getUserData: () => Promise<IWorker> = async () =>
 
 export default function MobileProfile() {
   const navigate = useNavigate();
-  const { data, error, isLoading } = useSWR<IWorker>(getUser(), getUserData);
+  const { data, error, mutate } = useSWR<IWorker>(getUser(), getUserData);
+
+  if (error) {
+    console.error(error);
+    return <RequestError errorDescription={error} reload={mutate} />;
+  }
 
   return (
     <ProfileLayoutMobile>
@@ -86,12 +91,14 @@ export default function MobileProfile() {
           gap="0.5rem"
           marginBottom="2rem"
         >
-          <Box component="img" src="/images/profile.png" />
+          <Box
+            component="img"
+            src="/images/profile.png"
+            alt={data && data.image_link}
+          />
           {data ? (
             <>
-              <TypographyH1Styled>
-                {data.name.split(" ")[1]}
-              </TypographyH1Styled>
+              <TypographyH1Styled>{data.name.split(" ")[1]}</TypographyH1Styled>
               <BadgeStyled
                 badgeContent={`${data.grade}-специалист`}
                 status="warning"

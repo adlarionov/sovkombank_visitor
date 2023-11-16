@@ -6,8 +6,11 @@ import BadgeStyled from "../BadgeStyled";
 
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useSWR from "swr";
+import { useEffect, useState } from "react";
+import PointService from "../../services/pointService";
+import RequestError from "../RequestError";
 
 const TypographyCaption = styled(Typography)({
   ...typographyDesktop.caption,
@@ -21,6 +24,9 @@ const StyledButton = styled(Button)({
   height: "fit-content",
 });
 
+const getDepartments: () => Promise<ITableDataAddresses[]> = async () =>
+  await PointService.getPoints();
+
 export default function TableDepartments({
   columns,
   additionalDepartments,
@@ -30,25 +36,40 @@ export default function TableDepartments({
   additionalDepartments: ITableDataAddresses[];
   onEdit: (value: string) => void;
 }) {
+  const { data, error, isLoading, mutate } = useSWR<ITableDataAddresses[]>(
+    additionalDepartments,
+    getDepartments
+  );
   const [departmentList, setDepartmentList] = useState<ITableDataAddresses[]>(
     additionalDepartments
   );
 
+  useEffect(() => {
+    if (data) setDepartmentList(data);
+  }, [data, isLoading]);
+
   const navigate = useNavigate();
 
-  const handleDeleteRow = (id: string) => {
-    const departments = additionalDepartments.filter((task) => {
-      return task.id !== id;
+  const handleDeleteRow = (id: number) => {
+    const departments = additionalDepartments.filter((department) => {
+      return department.id !== id;
     });
     setDepartmentList(departments);
   };
 
-  const handleEditDepartment = (departmentId: string) => {
+  console.log(data);
+
+  const handleEditDepartment = (departmentId: number) => {
     navigate({
       search: `?editDepartment=${departmentId}`,
     });
     onEdit(`?editDepartment=${departmentId}`);
   };
+
+  if (error) {
+    console.error(error);
+    return <RequestError errorDescription={error} reload={mutate} />;
+  } 
 
   return (
     <Box

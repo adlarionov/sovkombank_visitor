@@ -80,13 +80,13 @@ export const tableDataAddresses = [
 ];
 
 export interface ITableDataAddresses {
-  id: string;
+  id: number;
   address: string;
   when_connected: string;
   is_delivered: string;
-  days_passed: string;
-  approved_amount: string;
-  given_amount: string;
+  days_passed: number;
+  approved_amount: number;
+  given_amount: number;
 }
 
 export const tableDataEmployees = [

@@ -42,7 +42,6 @@ const data = [
 ];
 
 const DashboardPage = () => {
-
   return (
     <Box>
       <Stack direction="row" justifyContent={"space-between"}>
@@ -70,13 +69,13 @@ const DashboardPage = () => {
             title="Задачи выполнено"
             count={2}
             date="07.11.23"
-            color="#CD3636"
+            color="#2F9461"
           />
           <DashboardCard
             title="Задач не выполнено"
             count={5}
             date="07.11.23"
-            color="#2F9461"
+            color="#CD3636"
           />
         </GridBoxRow1>
         <GridBoxRow2>
