@@ -12,8 +12,7 @@ import { useNavigate } from "react-router-dom";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useFormik } from "formik";
 import { ITableDataAddresses } from "../../../shared/components/Table/components/TableData";
-import PointService from "../../../shared/services/pointService";
-import axios from "axios";
+import httpClient from "../../../shared/api/httpClient";
 
 const StyledButton = styled(Button)({
   color: "black",
@@ -55,32 +54,14 @@ export default function DepartmentChangeForm({
   const navigate = useNavigate();
 
   const createDepartment = async (values: ITableDataAddresses) => {
-    const response = await PointService.addPoints(
-      values.id,
-      values.address,
-      values.when_connected,
-      values.is_delivered,
-      values.given_amount,
-      values.approved_amount,
-      values.days_passed
-    );
+    const response = await httpClient.post("/points/add", { body: values });
     console.log(values, response);
   };
 
   const updateDepartment = async (values: ITableDataAddresses) => {
-    const response = await axios.put(
-      `http://94.139.254.148/points/update/${values.id}`,
-      values
-    );
-    // const response = await PointService.updatePointsById(
-    //   values.id,
-    //   values.address,
-    //   values.when_connected,
-    //   values.is_delivered,
-    //   values.given_amount,
-    //   values.approved_amount,
-    //   values.days_passed
-    // );
+    const response = await httpClient.put(`/points/update/${values.id}`, {
+      body: values,
+    });
     console.log(values, response);
   };
 
@@ -97,7 +78,6 @@ export default function DepartmentChangeForm({
     onSubmit: async (values, { resetForm }) => {
       type === "create" ? createDepartment(values) : updateDepartment(values);
       onSubmitForm(values);
-      alert(JSON.stringify(values, null, 2));
       navigate("/manager/departments");
       resetForm();
     },

@@ -37,76 +37,8 @@ function createHttpClient(options?: FetchOptions) {
     });
   }
 
-  interface FileResponse {
-    fileName: string;
-    blob: Blob;
-  }
 
-  async function downloadFile(
-    url: string,
-    fetchOptions?: FetchOptions<"blob">
-  ): Promise<FileResponse> {
-    let fileName = "download.xlsx";
-
-    const blob = await fetch<FileResponse, "blob">(url, {
-      ...fetchOptions,
-      method: "GET",
-      onResponse: ({ response }) => {
-        const contentDisposition = response.headers.get("content-disposition");
-
-        if (contentDisposition !== null) {
-          let name = contentDisposition.split(/;(.+)/)[1].split(/=(.+)/)[1];
-
-          if (name.toLowerCase().startsWith("utf-8''")) {
-            name = decodeURIComponent(name.replace(/(utf|UTF)-8''/, ""));
-          } else {
-            name = decodeURIComponent(name.replace(/['"]/g, ""));
-          }
-
-          if (name) fileName = name;
-        }
-      },
-    });
-
-    return {
-      fileName,
-      blob,
-    };
-  }
-
-  async function downloadFilePost(
-    url: string,
-    fetchOptions?: FetchOptions<"blob">
-  ): Promise<FileResponse> {
-    let fileName = "template.xlsx";
-
-    const blob = await fetch<FileResponse, "blob">(url, {
-      ...fetchOptions,
-      method: "POST",
-      onResponse: ({ response }) => {
-        const contentDisposition = response.headers.get("content-disposition");
-
-        if (contentDisposition !== null) {
-          let name = contentDisposition.split(/;(.+)/)[1].split(/=(.+)/)[1];
-
-          if (name.toLowerCase().startsWith("utf-8''")) {
-            name = decodeURIComponent(name.replace(/(utf|UTF)-8''/, ""));
-          } else {
-            name = decodeURIComponent(name.replace(/['"]/g, ""));
-          }
-
-          if (name) fileName = name;
-        }
-      },
-    });
-
-    return {
-      fileName,
-      blob,
-    };
-  }
-
-  return { get, post, put, del, downloadFile, downloadFilePost };
+  return { get, post, put, del };
 }
 
 export default createHttpClient();

@@ -119,16 +119,6 @@ const DashboardPage = () => {
                   />
                   <Typography>KPI</Typography>
                 </Stack>
-                <Stack direction={"row"} alignItems={"center"}>
-                  <FiberManualRecordRoundedIcon
-                    sx={{
-                      color: "#003790",
-                      fontSize: "0.8rem",
-                      marginRight: "0.25rem",
-                    }}
-                  />
-                  <Typography>Задачи</Typography>
-                </Stack>
               </Stack>
             </Stack>
 
@@ -159,11 +149,6 @@ const DashboardPage = () => {
                   color: "#FC5055",
                   // label: "KPI",
                 },
-                {
-                  data: [75, 40, 100, 100, 100, 120],
-                  color: "#003790",
-                  // label: "Задачи",
-                },
               ]}
               height={300}
             />
@@ -191,8 +176,8 @@ const DashboardPage = () => {
                   data,
                   arcLabel: (item) => `${item.value}`,
                   arcLabelMinAngle: 45,
-                  innerRadius: 110,
-                  outerRadius: 160,
+                  innerRadius: 100,
+                  outerRadius: 150,
                   cy: 300,
                   cx: (document.body.clientWidth - 181) / 8,
                 },

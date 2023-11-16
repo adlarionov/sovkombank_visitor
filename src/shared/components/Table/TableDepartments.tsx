@@ -11,6 +11,7 @@ import useSWR from "swr";
 import { useEffect, useState } from "react";
 import PointService from "../../services/pointService";
 import RequestError from "../RequestError";
+import httpClient from "../../api/httpClient";
 
 const TypographyCaption = styled(Typography)({
   ...typographyDesktop.caption,
@@ -36,8 +37,8 @@ export default function TableDepartments({
   additionalDepartments: ITableDataAddresses[];
   onEdit: (value: string) => void;
 }) {
-  const { data, error, isLoading, mutate } = useSWR<ITableDataAddresses[]>(
-    additionalDepartments,
+  const { data, error, mutate } = useSWR<ITableDataAddresses[]>(
+    "/points/get",
     getDepartments
   );
   const [departmentList, setDepartmentList] = useState<ITableDataAddresses[]>(
@@ -46,18 +47,21 @@ export default function TableDepartments({
 
   useEffect(() => {
     if (data) setDepartmentList(data);
-  }, [data, isLoading]);
+  }, [data]);
 
   const navigate = useNavigate();
+
+  const deleteDepartment = async (departmentId: number) => {
+    await httpClient.del(`/points/delete/${departmentId}`);
+  };
 
   const handleDeleteRow = (id: number) => {
     const departments = additionalDepartments.filter((department) => {
       return department.id !== id;
     });
+    deleteDepartment(id);
     setDepartmentList(departments);
   };
-
-  console.log(data);
 
   const handleEditDepartment = (departmentId: number) => {
     navigate({
@@ -69,7 +73,7 @@ export default function TableDepartments({
   if (error) {
     console.error(error);
     return <RequestError errorDescription={error} reload={mutate} />;
-  } 
+  }
 
   return (
     <Box

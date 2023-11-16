@@ -236,7 +236,7 @@ export default function ManagerTasks({
                 <ManagerTaskCard task={tasks[0]} size="big" />
                 <Box display="flex" flexDirection="column">
                   {tasks.slice(1).map((task) => (
-                    <ManagerTaskCard task={task} size="small" />
+                    <ManagerTaskCard task={task} size="small" key={task.id} />
                   ))}
                 </Box>
               </Box>

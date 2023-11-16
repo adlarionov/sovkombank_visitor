@@ -7,6 +7,7 @@ import TableDepartments from "../../../shared/components/Table/TableDepartments"
 import { addressColumns } from "../../../shared/components/Table/components/Columns";
 import { ITableDataAddresses } from "../../../shared/components/Table/components/TableData";
 import { useNavigate } from "react-router-dom";
+import { utils, writeFile } from "xlsx";
 
 const TypographyH1Desktop = styled(Typography)({
   ...typographyDesktop.h1,
@@ -40,6 +41,14 @@ export default function Departments({
     onCreate("?create=true");
   };
 
+  const handleExcelExport = () => {
+    const ws = utils.json_to_sheet(departmentList);
+
+    const workBook = utils.book_new();
+    utils.book_append_sheet(workBook, ws, "Отделы");
+    writeFile(workBook, "Отделы.xlsx");
+  };
+
   return (
     <Stack flexDirection={"column"} gap={"1.25rem"}>
       <Stack
@@ -50,7 +59,7 @@ export default function Departments({
       >
         <TypographyH1Desktop>Отделения</TypographyH1Desktop>
         <Stack direction="row" gap={"0.5rem"}>
-          <StyledButton sx={{ bgcolor: "white" }}>
+          <StyledButton sx={{ bgcolor: "white" }} onClick={handleExcelExport}>
             <Stack direction="row" gap={"0.5rem"}>
               <ExcelIcon />
               <TypographyButton>Скачать в Excel</TypographyButton>

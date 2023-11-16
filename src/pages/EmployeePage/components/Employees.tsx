@@ -8,6 +8,7 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import TableEmployees from "../../../shared/components/Table/TableEmployees";
 import { employeesColumns } from "../../../shared/components/Table/components/Columns";
 import { ITableDataEmployees } from "../../../shared/components/Table/components/TableData";
+import { utils, writeFile } from "xlsx";
 
 const TypographyH1Desktop = styled(Typography)({
   ...typographyDesktop.h1,
@@ -34,7 +35,15 @@ export default function Employees({
 }) {
   const handleAddDepartment = () => {
     onCreate("?create=true");
-    console.log("here")
+    console.log("here");
+  };
+
+  const handleExcelExport = () => {
+    const ws = utils.json_to_sheet(employeesList);
+
+    const workBook = utils.book_new();
+    utils.book_append_sheet(workBook, ws, "Сотрудники");
+    writeFile(workBook, "Сотрудники.xlsx");
   };
 
   return (
@@ -47,7 +56,7 @@ export default function Employees({
       >
         <TypographyH1Desktop>Сотрудники</TypographyH1Desktop>
         <Stack direction="row" gap={"0.5rem"}>
-          <StyledButton sx={{ bgcolor: "white" }}>
+          <StyledButton sx={{ bgcolor: "white" }} onClick={handleExcelExport}>
             <Stack direction="row" gap={"0.5rem"}>
               <ExcelIcon />
               <TypographyButton>Скачать в Excel</TypographyButton>
