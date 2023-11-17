@@ -19,7 +19,6 @@ import Learning from "../../../shared/assets/learning.png";
 import Courier from "../../../shared/assets/courier.png";
 import ChartLayout from "../DialogChat.tsx/components/ChartLayout";
 
-
 import { styled } from "@mui/material";
 
 const ChatHeader = styled(Box)({

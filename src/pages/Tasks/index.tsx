@@ -282,7 +282,7 @@ export default function Tasks() {
                 </TabsList>
               </Tabs>
             </Box>
-
+            <TabPanel></TabPanel>
             <BottomBlock>
               {tasks.map((step) => (
                 <Box key={step.id} sx={{ padding: "0.5rem" }}>

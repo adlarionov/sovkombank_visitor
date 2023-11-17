@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ ts-nocheck TODO
+// @ts-nocheck TODO
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Button, Stack, styled } from "@mui/material";
