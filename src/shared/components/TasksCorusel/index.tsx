@@ -67,23 +67,25 @@ const TaskCorusel = ({ openTaskList }: { openTaskList: () => void }) => {
               onChangeIndex={handleStepChange}
               enableMouseEvents
             >
-              {tasks.map((step, index) => (
-                <div key={step.order}>
-                  {Math.abs(activeStep - index) <= 2 ? (
-                    <TaskCard
-                      status={step.status}
-                      worker_id={step.worker_id}
-                      isList={false}
-                      title={step.task_type}
-                      address={step.address}
-                      time={formatTime(step.duration)}
-                      priority={step.priority}
-                      openTaskList={openTaskList}
-                      taskNumber={step.order}
-                    />
-                  ) : null}
-                </div>
-              ))}
+              {tasks
+                .sort((a, _) => (a.status !== "начато" ? 1 : -1))
+                .map((step, index) => (
+                  <div key={step.order}>
+                    {Math.abs(activeStep - index) <= 2 ? (
+                      <TaskCard
+                        status={step.status}
+                        worker_id={step.worker_id}
+                        isList={false}
+                        title={step.task_type}
+                        address={step.address}
+                        time={formatTime(step.duration)}
+                        priority={step.priority}
+                        openTaskList={openTaskList}
+                        taskNumber={step.order}
+                      />
+                    ) : null}
+                  </div>
+                ))}
             </SwipeableViews>
           </Box>
         </>

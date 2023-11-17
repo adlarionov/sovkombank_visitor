@@ -51,9 +51,9 @@ const getTasksStatus: () => Promise<ITaskStatus> = async () => {
   return await TasksService.getTasksStatusInfo();
 };
 
-const getKpiFetcher: () => Promise<void> = async () => {
-  return await TasksService.getKpi();
-};
+// const getKpiFetcher: () => Promise<void> = async () => {
+//   return await TasksService.getKpi();
+// };
 const DashboardPage = () => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
 
@@ -62,7 +62,7 @@ const DashboardPage = () => {
     "/workers/tasks_status_info",
     getTasksStatus
   );
-  const kpiData = useSWR("/workers/get_kpi", getKpiFetcher);
+  // const kpiData = useSWR("/workers/get_kpi", getKpiFetcher);
 
   // const formatCredential = (element: string) => {
   //   if (kpiData.data) {
@@ -94,12 +94,12 @@ const DashboardPage = () => {
     );
   }
 
-  if (kpiData.error) {
-    console.error(kpiData.error);
-    return (
-      <RequestError errorDescription={kpiData.error} reload={kpiData.mutate} />
-    );
-  }
+  // if (kpiData.error) {
+  //   console.error(kpiData.error);
+  //   return (
+  //     <RequestError errorDescription={kpiData.error} reload={kpiData.mutate} />
+  //   );
+  // }
 
   return (
     <Box>

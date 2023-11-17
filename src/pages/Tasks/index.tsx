@@ -120,7 +120,7 @@ const getTasks: () => Promise<ITask[]> = async () =>
   await TasksService.getTasks(Number(getUser()));
 
 export default function Tasks() {
-  const apiKey = "5e139f2a-31ef-4930-a854-0ca3f7aa5034";
+  const apiKey = "d5918306-ec3f-40ad-a705-0c3d36aa30e8";
   const [isOpenTasksList, setIsOpenTasksList] = useState(false);
 
   const [selectedPoint, setSelectedPoint] = useState<number[]>();
@@ -157,7 +157,6 @@ export default function Tasks() {
   // ]; // Replace with your array of addresses
 
   useEffect(() => {
-    getAddresses();
     const geocodeAddress = async (address: string) => {
       const response = await fetch(
         `https://geocode-maps.yandex.ru/1.x/?apikey=${apiKey}&format=json&geocode=${encodeURIComponent(
@@ -182,8 +181,6 @@ export default function Tasks() {
       .catch((error) => console.error("Error fetching geocoding data:", error));
   }, []);
 
-  console.log(coordinatesList);
-
   const getPoints = async () => {
     const poins = await PointService.getPoints();
     console.log(poins);
@@ -191,6 +188,7 @@ export default function Tasks() {
 
   useEffect(() => {
     getPoints();
+    getAddresses();
   }, []);
 
   useEffect(() => {
@@ -256,6 +254,8 @@ export default function Tasks() {
     }
   };
 
+  console.log("list", coordinatesList);
+
   useEffect(() => {
     if (selectedPoint && currentLocation) {
       addRoute();
@@ -268,7 +268,7 @@ export default function Tasks() {
         <div>
           <YMaps
             query={{
-              apikey: "5e139f2a-31ef-4930-a854-0ca3f7aa5034",
+              apikey: "d5918306-ec3f-40ad-a705-0c3d36aa30e8",
               lang: "ru_RU",
             }}
           >
