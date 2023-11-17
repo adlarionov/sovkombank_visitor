@@ -7,15 +7,19 @@ import { typographyMobile } from "../../config/typography";
 import ConfirmDialog from "../ConfirmDialog";
 import { useEffect, useState } from "react";
 import { getTime, setTime, stopTime } from "../../hooks/useTime";
+import axios from "axios";
 
 interface TaskCardProps {
   title: string;
   address: string;
   time: string;
   priority: string;
+  worker_id: number;
+  taskNumber: number;
   comment?: string;
+  status: string;
   openTaskList?: () => void;
-  taskNumber?: number;
+  isList: boolean;
 }
 
 const TypographyH1Mobile = styled(Typography)({
@@ -31,17 +35,38 @@ const TaskCard = ({
   address,
   openTaskList,
   taskNumber,
+  worker_id,
+  isList,
+  status,
 }: TaskCardProps) => {
   const [wastedTime, setWastedTime] = useState<string>("00:00");
   const [isStarted, setIsStarted] = useState<boolean>(false);
 
+  const startTask = async () => {
+    const response = await axios.post(
+      `http://94.139.254.148/workers/start_task?worker_id=${worker_id}&order=${taskNumber}`
+    );
+    // const response = await TasksService.startTask(worker_id, taskNumber);
+    console.log(worker_id, taskNumber, response);
+  };
+
+  const stopTask = async () => {
+    const response = await axios.post(
+      `http://94.139.254.148/workers/finish_task?worker_id=${worker_id}&order=${taskNumber}`
+    );
+    // const response = await TasksService.startTask(worker_id, taskNumber);
+    console.log(worker_id, taskNumber, response);
+  };
+
   const handleStartTask = () => {
     setTime();
+    startTask();
     setIsStarted(true);
   };
 
   const handleStopTask = () => {
     stopTime();
+    stopTask();
     setIsStarted(false);
   };
 
@@ -66,7 +91,7 @@ const TaskCard = ({
 
   return (
     <Stack>
-      {taskNumber ? (
+      {isList ? (
         <TypographyH1Mobile>{`Задача № ${taskNumber}`}</TypographyH1Mobile>
       ) : null}
       <Stack direction="row">
@@ -153,7 +178,7 @@ const TaskCard = ({
       >
         Чат с менеджером
       </Link>
-      {!isStarted ? (
+      {!isStarted && status === "закончено" ? (
         <ConfirmDialog buttonText="Начать" onConfirmClick={handleStartTask} />
       ) : (
         <>

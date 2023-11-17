@@ -1,21 +1,51 @@
 import Box from "@mui/material/Box";
 import SwipeableViews from "react-swipeable-views";
 import TaskCard from "../TaskCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MobileStepper from "@mui/material/MobileStepper";
 import { theme } from "../../../app/providers/ThemeProvider/theme";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
-import { tasks } from "../../tasksDummy";
+import ITask from "../../interfaces/ITask";
+import TasksService from "../../services/tasksService";
+import useSWR from "swr";
+import RequestError from "../RequestError";
+
+const getTasks: () => Promise<ITask[]> = async () =>
+  await TasksService.getTasks(2);
 
 const TaskCorusel = ({ openTaskList }: { openTaskList: () => void }) => {
   const [activeStep, setActiveStep] = useState(0);
+  const [tasks, setTasks] = useState<ITask[]>([]);
+  const { data, error, mutate } = useSWR<ITask[]>(
+    "/workers/get_tasks",
+    getTasks
+  );
+
+  useEffect(() => {
+    if (data) setTasks(data);
+  }, [data]);
+
+  const formatTime = (time: number): string => {
+    const hours = (time - (time % 60)) / 60;
+    const minutes = time % 60;
+    return `${hours < 10 ? `0${hours}` : hours}:${
+      minutes < 10 ? `0${minutes}` : minutes
+    }`;
+  };
 
   const maxSteps = tasks.length;
 
   const handleStepChange = (step: number) => {
     setActiveStep(step);
   };
+
+  if (error) {
+    console.error(error);
+    return <RequestError errorDescription={error} reload={mutate} />;
+  }
+
+  console.log(data);
 
   return (
     <>
@@ -37,14 +67,18 @@ const TaskCorusel = ({ openTaskList }: { openTaskList: () => void }) => {
               enableMouseEvents
             >
               {tasks.map((step, index) => (
-                <div key={step.id}>
+                <div key={step.order}>
                   {Math.abs(activeStep - index) <= 2 ? (
                     <TaskCard
-                      title={step.title}
+                      status={step.status}
+                      worker_id={step.worker_id}
+                      isList={false}
+                      title={step.task_type}
                       address={step.address}
-                      time={step.time}
+                      time={formatTime(step.duration)}
                       priority={step.priority}
                       openTaskList={openTaskList}
+                      taskNumber={step.order}
                     />
                   ) : null}
                 </div>

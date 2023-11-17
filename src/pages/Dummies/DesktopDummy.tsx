@@ -10,6 +10,7 @@ import ArrowIcon from "../../shared/components/Icons/ArrowIcon";
 import PhoneMockup from "../../shared/assets/iPhoneMocup.png";
 
 const DesktopDummy = () => {
+
   return (
     <Box
       sx={{

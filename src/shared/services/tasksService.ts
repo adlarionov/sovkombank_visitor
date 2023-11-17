@@ -40,9 +40,8 @@ async function getTasksStatusInfo(): Promise<ITaskStatus> {
   return await httpClient.get("/workers/tasks_status_info");
 }
 
-// FIXME:
-async function getKpi(worker_id: number): Promise<{ credential: number }> {
-  return await httpClient.get(`/workers/get_kpi_by_id/${worker_id}`);
+async function getKpi(): Promise<void> {
+  return await httpClient.get(`/workers/get_kpi`);
 }
 
 async function getKpiById(

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { styled } from "@mui/material";
+import { Box, Typography, styled } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { theme } from "../../../app/providers/ThemeProvider/theme";
 import DropListIcon from "../Icons/DragbleDropDownIcon";
@@ -24,7 +24,13 @@ const StyledDrawer = styled(Drawer)({
   },
 });
 
-function BottomSheet({ openTaskList }: { openTaskList: () => void }) {
+function BottomSheet({
+  openTaskList,
+  isTasks,
+}: {
+  openTaskList: () => void;
+  isTasks: boolean;
+}) {
   const [startY, setStartY] = useState(0);
   const [currentY, setCurrentY] = useState(0);
   const drawerRef = useRef<HTMLDivElement | null>(null);
@@ -78,8 +84,24 @@ function BottomSheet({ openTaskList }: { openTaskList: () => void }) {
             alignItems: "center",
           }}
         >
-          <DropListIcon />
-          <TaskCorusel openTaskList={openTaskList} />
+          {isTasks ? (
+            <>
+              <DropListIcon />
+              <TaskCorusel openTaskList={openTaskList} />
+            </>
+          ) : (
+            <>
+              <DropListIcon />
+              <Box
+                marginTop={"2rem"}
+                display={"flex"}
+                alignItems={"center"}
+                justifyContent={"center"}
+              >
+                <Typography>На этот день нет задач</Typography>
+              </Box>
+            </>
+          )}
         </div>
       </StyledDrawer>
     </div>

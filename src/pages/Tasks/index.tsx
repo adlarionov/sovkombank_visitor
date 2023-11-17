@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 
 import Box from "@mui/material/Box";
 import {
@@ -6,7 +6,6 @@ import {
   Map,
   GeolocationControl,
   ZoomControl,
-  TrafficControl,
   Placemark,
 } from "react-yandex-maps";
 
@@ -24,6 +23,7 @@ import { ITaskCard } from "../../shared/interfaces/ITaskCard";
 import TaskCard from "../../shared/components/TaskCard";
 import { TabsList } from "../../shared/components/Tabs/TabList";
 import { Tab } from "../../shared/components/Tabs/Tab";
+import { TabPanel } from "@mui/base/TabPanel";
 import PointService from "../../shared/services/pointService";
 import { getDays } from "../../shared/hooks/getTime";
 
@@ -257,9 +257,14 @@ export default function Tasks() {
               <Tab value={1}>Сегодня, {days[0]} ноября</Tab>
               <Tab value={2}>Завтра, {days[1]} ноября</Tab>
             </TabsList>
+            <TabPanel value={1}>
+              <BottomSheet openTaskList={openModal} isTasks={true} />
+            </TabPanel>
+            <TabPanel value={2}>
+              <BottomSheet openTaskList={openModal} isTasks={false} />
+            </TabPanel>
           </Tabs>
         </StyledButtonGroup>
-        <BottomSheet openTaskList={openModal} />
       </Box>
 
       {isOpenTasksList && (
@@ -277,26 +282,40 @@ export default function Tasks() {
 
               <Tabs style={{ marginBottom: "2rem" }} defaultValue={1}>
                 <TabsList>
-                  <Tab value={1}>Сегодня, 4 ноября</Tab>
-                  <Tab value={2}>Завтра, 5 ноября</Tab>
+                  <Tab value={1}>Сегодня, {days[0]} ноября</Tab>
+                  <Tab value={2}>Завтра, {days[1]} ноября</Tab>
                 </TabsList>
+                <TabPanel value={1}>
+                  <BottomBlock>
+                    {tasks.map((step) => (
+                      <Box key={step.id} sx={{ padding: "0.5rem" }}>
+                        <TaskCard
+                          status={"закончено"}
+                          worker_id={2}
+                          isList={true}
+                          title={step.title}
+                          address={step.address}
+                          time={step.time}
+                          priority={step.priority}
+                          taskNumber={step.taskNumber}
+                        />
+                        <Divider sx={{ marginTop: "0.5rem" }} />
+                      </Box>
+                    ))}
+                  </BottomBlock>
+                </TabPanel>
+                <TabPanel value={2}>
+                  <Box
+                    marginTop={"2rem"}
+                    display={"flex"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
+                  >
+                    <Typography>На этот день нет задач</Typography>
+                  </Box>
+                </TabPanel>
               </Tabs>
             </Box>
-            <TabPanel></TabPanel>
-            <BottomBlock>
-              {tasks.map((step) => (
-                <Box key={step.id} sx={{ padding: "0.5rem" }}>
-                  <TaskCard
-                    title={step.title}
-                    address={step.address}
-                    time={step.time}
-                    priority={step.priority}
-                    taskNumber={step.taskNumber}
-                  />
-                  <Divider sx={{ marginTop: "0.5rem" }} />
-                </Box>
-              ))}
-            </BottomBlock>
           </Box>
         </ModalStyles>
       )}

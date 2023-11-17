@@ -21,6 +21,7 @@ import WorkersService from "../../shared/services/workersService";
 import IWorker from "../../shared/interfaces/IWorker";
 import useSWR from "swr";
 import RequestError from "../../shared/components/RequestError";
+import IKpi from "../../shared/interfaces/IKpi";
 
 const ProfileLayoutMobile = styled("div")({
   background: palette.background.tertiary,
@@ -55,12 +56,17 @@ const TypographyTextStyled = styled(Typography)({
 const getUserData: () => Promise<IWorker> = async () =>
   await WorkersService.getWorkersById(2);
 
+const getUserDataKpi: () => Promise<IKpi> = async () =>
+  await WorkersService.getWorkersKPIById(2);
+
 export default function MobileProfile() {
   const navigate = useNavigate();
   const { data, error, mutate } = useSWR<IWorker>(getUser(), getUserData);
 
+  const swrData = useSWR<IKpi>("/kpi_by_id", getUserDataKpi);
+
   if (error) {
-    // console.error(error);
+    console.error(error);
     return <RequestError errorDescription={error} reload={mutate} />;
   }
 
@@ -132,7 +138,11 @@ export default function MobileProfile() {
           >
             Ваш KPI
           </TypographyH2Styled>
-          {data ? <SwitchTabs kpiValue={data.kpi} /> : <Skeleton />}
+          {swrData.data ? (
+            <SwitchTabs kpiValue={swrData.data.kpi} />
+          ) : (
+            <Skeleton />
+          )}
           <Box
             display={"flex"}
             marginTop={"1.5rem"}
@@ -140,9 +150,13 @@ export default function MobileProfile() {
             gap="0.5rem"
           >
             <LoopIcon width={30} height={30} htmlColor="#2DDF5F" />
-            <TypographyTextStyled>
-              <strong>Обновлено:</strong> Сегодня в 9:00
-            </TypographyTextStyled>
+            {swrData.data ? (
+              <TypographyTextStyled>
+                <strong>Обновлено:</strong> {swrData.data.updated.split(" ")[0]}
+              </TypographyTextStyled>
+            ) : (
+              <Skeleton animation="wave" width={100} />
+            )}
           </Box>
         </Box>
         <Box

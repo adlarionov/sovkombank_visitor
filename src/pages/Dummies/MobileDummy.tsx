@@ -4,8 +4,19 @@ import Typography from "@mui/material/Typography";
 import { typographyMobile } from "../../shared/config/typography";
 import ArrowIcon from "../../shared/components/Icons/ArrowIcon";
 import Mocup from "../../shared/assets/MacbookMocap.png";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MobileDummy = () => {
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
+  }, [navigate])
+  
+
   return (
     <>
       <Box
@@ -19,8 +30,8 @@ const MobileDummy = () => {
       >
         <Typography sx={{ ...typographyMobile.h1 }}>
           <span style={{ color: theme.palette.primary.main }}>Упс! </span>
-          Мобильная версия сервиса для вашей роли сейчас не доступна,
-          так как находится в разработке
+          Мобильная версия сервиса для вашей роли сейчас не доступна, так как
+          находится в разработке
         </Typography>
         <Typography
           color={theme.palette.text.secondary}

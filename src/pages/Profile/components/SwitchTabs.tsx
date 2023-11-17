@@ -114,7 +114,18 @@ export default function SwitchTabs({ kpiValue }: { kpiValue: number }) {
               height={160}
               series={[
                 {
-                  data: data.month,
+                  data: [
+                    {
+                      id: 0,
+                      value: kpiValue,
+                      color: kpiValue > 80 ? "#2DDF5F" : palette.button.default,
+                    },
+                    {
+                      id: 1,
+                      value: 100 - kpiValue,
+                      color: kpiValue > 80 ? "#2DDF5F4D" : "#FC50554D",
+                    },
+                  ],
                   outerRadius: 80,
                   innerRadius: 65,
                   paddingAngle: 3,
@@ -128,9 +139,7 @@ export default function SwitchTabs({ kpiValue }: { kpiValue: number }) {
             <Box textAlign={"center"} width="5.125rem" margin={"-125px 140px"}>
               <TypographyH1Styled>{kpiValue || 0}%</TypographyH1Styled>
               <TypographyTextStyled>
-                {data?.month[0].value > 80
-                  ? "Успешно выполнено!"
-                  : "План не выполнен"}
+                {kpiValue > 80 ? "Успешно выполнено!" : "План не выполнен"}
               </TypographyTextStyled>
             </Box>
           </TabPanel>
@@ -141,7 +150,14 @@ export default function SwitchTabs({ kpiValue }: { kpiValue: number }) {
               height={160}
               series={[
                 {
-                  data: data.quarter,
+                  data: [
+                    {
+                      id: 0,
+                      value: 0,
+                      color: palette.button.default,
+                    },
+                    { id: 1, value: 100, color: "#FC50554D" }, // TODO: value here is for not used KPI
+                  ],
                   outerRadius: 80,
                   innerRadius: 65,
                   paddingAngle: 3,
@@ -153,7 +169,7 @@ export default function SwitchTabs({ kpiValue }: { kpiValue: number }) {
               ]}
             />
             <Box textAlign={"center"} width="5.125rem" margin={"-125px 140px"}>
-              <TypographyH1Styled>{kpiValue || 0}%</TypographyH1Styled>
+              <TypographyH1Styled>{0}%</TypographyH1Styled>
               <TypographyTextStyled>
                 {data.quarter[0].value > 80
                   ? "Успешно выполнено!"

@@ -12,6 +12,10 @@ import { theme } from "../../app/providers/ThemeProvider/theme";
 import FiberManualRecordRoundedIcon from "@mui/icons-material/FiberManualRecordRounded";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import getTime from "../../shared/hooks/getTime";
+import TasksService from "../../shared/services/tasksService";
+import { ITaskStatus } from "../../shared/interfaces/ITask";
+import RequestError from "../../shared/components/RequestError";
+import useSWR from "swr";
 
 const StyledTypography = styled(Typography)({
   ...typographyDesktop.h1,
@@ -42,8 +46,33 @@ const data = [
   { label: "Доставка карт и материалов", value: 13, color: "#FC5055" },
 ];
 
+const getTasksStatus: () => Promise<ITaskStatus> = async () => {
+  return await TasksService.getTasksStatusInfo();
+};
+
+const getKpiFetcher: () => Promise<void> = async () => {
+  return await TasksService.getKpi();
+};
+
 const DashboardPage = () => {
   const today = getTime();
+  const taskStatus = useSWR<ITaskStatus>(
+    "/workers/tasks_status_info",
+    getTasksStatus
+  );
+  const kpiData = useSWR("/workers/get_kpi", getKpiFetcher);
+
+  console.log(kpiData.data);
+
+  if (taskStatus.error || kpiData.error) {
+    console.error(taskStatus.error);
+    return (
+      <RequestError
+        errorDescription={taskStatus.error || kpiData.error}
+        reload={taskStatus.mutate || kpiData.mutate}
+      />
+    );
+  }
 
   return (
     <Box>
@@ -63,16 +92,20 @@ const DashboardPage = () => {
       </Stack>
       <DashboardContent>
         <GridBoxRow1>
-          <DashboardCard title="Задач запланировано" count={7} date={today} />
+          <DashboardCard
+            title="Задач запланировано"
+            count={taskStatus.data ? taskStatus.data.planned : 0}
+            date={today}
+          />
           <DashboardCard
             title="Задачи выполнено"
-            count={2}
+            count={taskStatus.data ? taskStatus.data.finished : 0}
             date={today}
             color="#2F9461"
           />
           <DashboardCard
             title="Задач не выполнено"
-            count={5}
+            count={taskStatus.data ? taskStatus.data.not_finished : 0}
             date={today}
             color="#CD3636"
           />

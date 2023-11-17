@@ -16,6 +16,11 @@ import { taskColumns } from "../../../../shared/components/Table/components/Colu
 import { DashboardCard } from "../../../../shared/components/DashboardCard";
 import { useNavigate } from "react-router-dom";
 import { ITableData } from "../../../../shared/components/Table/components/TableData";
+import getTime from "../../../../shared/hooks/getTime";
+import { ITaskStatus } from "../../../../shared/interfaces/ITask";
+import TasksService from "../../../../shared/services/tasksService";
+import useSWR from "swr";
+import RequestError from "../../../../shared/components/RequestError";
 
 const DashboardContent = styled(Box)({
   display: "grid",
@@ -39,6 +44,10 @@ const StyledButton = styled(Button)({
   padding: "0.625rem 0.9375rem",
 });
 
+const getTasksStatus: () => Promise<ITaskStatus> = async () => {
+  return await TasksService.getTasksStatusInfo();
+};
+
 export default function ManagerTasks({
   onCreate,
   additionalTasks,
@@ -46,6 +55,7 @@ export default function ManagerTasks({
   onCreate: (value: string) => void;
   additionalTasks: ITableData[];
 }) {
+  const today = getTime();
   const [tabIndex, setTabIndex] = useState<number | string>(1);
   const [dates, setDates] = useState<{
     tomorrow: string;
@@ -57,12 +67,10 @@ export default function ManagerTasks({
 
   const navigate = useNavigate();
 
-  const handleClickCreateType = () => {
-    navigate({
-      search: "?create=true",
-    });
-    onCreate("?create=true");
-  };
+  const taskStatus = useSWR<ITaskStatus>(
+    "/workers/tasks_status_info",
+    getTasksStatus
+  );
 
   useEffect(() => {
     const day = new Date(Date.now());
@@ -83,21 +91,42 @@ export default function ManagerTasks({
     });
   }, []);
 
+  const handleClickCreateType = () => {
+    navigate({
+      search: "?create=true",
+    });
+    onCreate("?create=true");
+  };
+
+  if (taskStatus.error) {
+    console.error(taskStatus.error);
+    return (
+      <RequestError
+        errorDescription={taskStatus.error}
+        reload={taskStatus.mutate}
+      />
+    );
+  }
+
   return (
     <>
       <Typography sx={{ ...typographyDesktop.h1 }}>Задачи</Typography>
       <DashboardContent>
-        <DashboardCard title="Задач запланировано" count={7} date="07.11.23" />
+        <DashboardCard
+          title="Задач запланировано"
+          count={taskStatus.data ? taskStatus.data.planned : 0}
+          date={today}
+        />
         <DashboardCard
           title="Задачи выполнено"
-          count={2}
-          date="07.11.23"
+          count={taskStatus.data ? taskStatus.data.finished : 0}
+          date={today}
           color="#2F9461"
         />
         <DashboardCard
           title="Задач не выполнено"
-          count={5}
-          date="07.11.23"
+          count={taskStatus.data ? taskStatus.data.not_finished : 0}
+          date={today}
           color="#CD3636"
         />
       </DashboardContent>
