@@ -54,10 +54,10 @@ const TypographyTextStyled = styled(Typography)({
 });
 
 const getUserData: () => Promise<IWorker> = async () =>
-  await WorkersService.getWorkersById(2);
+  await WorkersService.getWorkersById(Number(getUser()));
 
 const getUserDataKpi: () => Promise<IKpi> = async () =>
-  await WorkersService.getWorkersKPIById(2);
+  await WorkersService.getWorkersKPIById(Number(getUser()));
 
 export default function MobileProfile() {
   const navigate = useNavigate();

@@ -18,9 +18,11 @@ const TypographyH3Mobile = styled(Typography)({
 export default function ConfirmDialog({
   buttonText,
   onConfirmClick,
+  isDisabled,
 }: {
   buttonText: string;
   onConfirmClick: () => void;
+  isDisabled: boolean;
 }) {
   const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
 
@@ -37,8 +39,9 @@ export default function ConfirmDialog({
     <>
       <StyledButtonMobile
         onClick={handleConfirmToggle}
-        sx={{ mt: "1rem" }}
+        sx={{ mt: "1rem", backgroundColor: isDisabled ? "#DBDBDB" : "#FC5055" }}
         variant="outlined"
+        disabled={isDisabled}
       >
         {buttonText}
       </StyledButtonMobile>

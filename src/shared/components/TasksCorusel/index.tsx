@@ -10,9 +10,10 @@ import ITask from "../../interfaces/ITask";
 import TasksService from "../../services/tasksService";
 import useSWR from "swr";
 import RequestError from "../RequestError";
+import { getUser } from "../../hooks/useUser";
 
 const getTasks: () => Promise<ITask[]> = async () =>
-  await TasksService.getTasks(2);
+  await TasksService.getTasks(Number(getUser()));
 
 const TaskCorusel = ({ openTaskList }: { openTaskList: () => void }) => {
   const [activeStep, setActiveStep] = useState(0);

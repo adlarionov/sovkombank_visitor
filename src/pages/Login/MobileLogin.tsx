@@ -100,8 +100,9 @@ export default function MobileLogin() {
   const fetchData = async ({ email, password }: ILogin) => {
     await LoginService.login(email, password)
       .then((resp) => {
+        console.log(resp);
         setUserId(resp.id.toString());
-        setUser(resp.id);
+        setUser(5);
         if (permission === "manager") {
           navigate("/managerr/dashboard");
         } else {

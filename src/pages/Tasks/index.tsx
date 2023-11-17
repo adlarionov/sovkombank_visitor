@@ -26,6 +26,11 @@ import { Tab } from "../../shared/components/Tabs/Tab";
 import { TabPanel } from "@mui/base/TabPanel";
 import PointService from "../../shared/services/pointService";
 import { getDays } from "../../shared/hooks/getTime";
+import useSWR from "swr";
+import TasksService from "../../shared/services/tasksService";
+import ITask from "../../shared/interfaces/ITask";
+import RequestError from "../../shared/components/RequestError";
+import { getUser } from "../../shared/hooks/useUser";
 
 const tasks = [
   {
@@ -111,16 +116,22 @@ const BottomBlock = styled(Box)({
   boxShadow: "0px 0px 4px 0px rgba(68, 68, 68, 0.16)",
 });
 
+const getTasks: () => Promise<ITask[]> = async () =>
+  await TasksService.getTasks(Number(getUser()));
+
 export default function Tasks() {
+  const apiKey = "5e139f2a-31ef-4930-a854-0ca3f7aa5034";
   const [isOpenTasksList, setIsOpenTasksList] = useState(false);
 
   const [selectedPoint, setSelectedPoint] = useState<number[]>();
   const [currentLocation, setCurrentLocation] = useState<number[]>([]);
+  const [addresses, setAddresses] = useState<string[]>([]);
 
   const [isFirstRoute, setIsFirstRoute] = useState<boolean>(true);
   const days = getDays();
 
   const [ymaps, setYmaps] = useState<any>();
+  const { data, error, mutate } = useSWR("/workers/get_tasks", getTasks);
 
   const mapState = {
     center: [44.98, 38.97],
@@ -128,6 +139,50 @@ export default function Tasks() {
   };
 
   const map = useRef(null);
+
+  const [coordinatesList, setCoordinatesList] = useState<
+    { latitude: number; longitude: number }[]
+  >([]);
+
+  const getAddresses = () => {
+    data?.map((element) => {
+      setAddresses((prevElement) => [...prevElement, element.address]);
+    });
+  };
+
+  // const addresses = [
+  //   "ул. Восточно-Кругликовская, д. 64/2",
+  //   "ул. им. Героя Аверкиева А.А., д. 8/1 к. мая, кв. 268",
+  //   "ул. им. Героя Аверкиева А.А., д. 8/1 к. мая, кв. 268",
+  // ]; // Replace with your array of addresses
+
+  useEffect(() => {
+    getAddresses();
+    const geocodeAddress = async (address: string) => {
+      const response = await fetch(
+        `https://geocode-maps.yandex.ru/1.x/?apikey=${apiKey}&format=json&geocode=${encodeURIComponent(
+          address
+        )}`
+      );
+      const data = await response.json();
+      const coordinates =
+        data.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(
+          " "
+        );
+      const latitude = parseFloat(coordinates[1]);
+      const longitude = parseFloat(coordinates[0]);
+
+      return { address, coordinates: { latitude, longitude } };
+    };
+
+    Promise.all(addresses.map(geocodeAddress))
+      .then((results) => {
+        setCoordinatesList(results.map((result) => result.coordinates));
+      })
+      .catch((error) => console.error("Error fetching geocoding data:", error));
+  }, []);
+
+  console.log(coordinatesList);
 
   const getPoints = async () => {
     const poins = await PointService.getPoints();
@@ -149,6 +204,11 @@ export default function Tasks() {
       }
     );
   }, []);
+
+  if (error) {
+    console.error(error);
+    return <RequestError errorDescription={error} reload={mutate} />;
+  }
 
   const openModal = () => {
     setIsOpenTasksList(true);
@@ -229,7 +289,16 @@ export default function Tasks() {
               />
               <ZoomControl options={{ position: { right: 20, top: 100 } }} />
 
-              <Placemark
+              {coordinatesList.map((coordinate) => {
+                return (
+                  <Placemark
+                    modules={["geoObject.addon.balloon"]}
+                    geometry={[coordinate.latitude, coordinate.longitude]}
+                    onClick={handlePlacemarkClick}
+                  />
+                );
+              })}
+              {/* <Placemark
                 modules={["geoObject.addon.balloon"]}
                 geometry={[45.06, 38.988]}
                 options={{ draggable: true }}
@@ -247,7 +316,7 @@ export default function Tasks() {
                 //   balloonContentBody: "Адрес такой-то",
                 // }}
                 onClick={handlePlacemarkClick}
-              />
+              /> */}
             </Map>
           </YMaps>
         </div>
@@ -287,17 +356,17 @@ export default function Tasks() {
                 </TabsList>
                 <TabPanel value={1}>
                   <BottomBlock>
-                    {tasks.map((step) => (
-                      <Box key={step.id} sx={{ padding: "0.5rem" }}>
+                    {data?.map((step) => (
+                      <Box key={step.order} sx={{ padding: "0.5rem" }}>
                         <TaskCard
-                          status={"закончено"}
-                          worker_id={2}
+                          status={step.status}
+                          worker_id={step.worker_id}
                           isList={true}
-                          title={step.title}
+                          title={step.task_type}
                           address={step.address}
-                          time={step.time}
+                          time={step.date}
                           priority={step.priority}
-                          taskNumber={step.taskNumber}
+                          taskNumber={step.order}
                         />
                         <Divider sx={{ marginTop: "0.5rem" }} />
                       </Box>

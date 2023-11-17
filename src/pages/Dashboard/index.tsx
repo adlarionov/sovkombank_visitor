@@ -2,7 +2,7 @@
 // @ts-nocheck TODO
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Button, Stack, styled } from "@mui/material";
+import { Alert, Button, Snackbar, Stack, styled } from "@mui/material";
 import { typographyDesktop } from "../../shared/config/typography";
 import { DashboardCard } from "../../shared/components/DashboardCard";
 
@@ -16,6 +16,7 @@ import TasksService from "../../shared/services/tasksService";
 import { ITaskStatus } from "../../shared/interfaces/ITask";
 import RequestError from "../../shared/components/RequestError";
 import useSWR from "swr";
+import { useState } from "react";
 
 const StyledTypography = styled(Typography)({
   ...typographyDesktop.h1,
@@ -53,8 +54,9 @@ const getTasksStatus: () => Promise<ITaskStatus> = async () => {
 const getKpiFetcher: () => Promise<void> = async () => {
   return await TasksService.getKpi();
 };
-
 const DashboardPage = () => {
+  const [isOpened, setIsOpened] = useState<boolean>(false);
+
   const today = getTime();
   const taskStatus = useSWR<ITaskStatus>(
     "/workers/tasks_status_info",
@@ -62,23 +64,57 @@ const DashboardPage = () => {
   );
   const kpiData = useSWR("/workers/get_kpi", getKpiFetcher);
 
-  console.log(kpiData.data);
+  // const formatCredential = (element: string) => {
+  //   if (kpiData.data) {
+  //     const result = element.split(" ");
+  //     console.log(
+  //       `${result[0]}.${result[1].slice(0, 1)}.${result[2].slice(0, 1)}.`
+  //     );
+  //     return `${result[0]}.${result[1]}`;
+  //   }
+  // };
 
-  if (taskStatus.error || kpiData.error) {
+  const handleStartAlgo = async () => {
+    await TasksService.generateTasks()
+      .then((tasks) => {
+        if (tasks) {
+          setIsOpened(true);
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+
+  if (taskStatus.error) {
     console.error(taskStatus.error);
     return (
       <RequestError
-        errorDescription={taskStatus.error || kpiData.error}
-        reload={taskStatus.mutate || kpiData.mutate}
+        errorDescription={taskStatus.error}
+        reload={taskStatus.mutate}
       />
+    );
+  }
+
+  if (kpiData.error) {
+    console.error(kpiData.error);
+    return (
+      <RequestError errorDescription={kpiData.error} reload={kpiData.mutate} />
     );
   }
 
   return (
     <Box>
       <Stack direction="row" justifyContent={"space-between"}>
+        <Snackbar
+          open={isOpened}
+          onClose={() => setIsOpened(false)}
+          autoHideDuration={2000}
+          anchorOrigin={{ horizontal: "center", vertical: "top" }}
+        >
+          <Alert severity="success">Алгоритм успешно отработал</Alert>
+        </Snackbar>
         <StyledTypography>Дашборд</StyledTypography>
         <Button
+          onClick={handleStartAlgo}
           sx={{
             background: theme.palette.primary.main,
             color: theme.palette.common.white,

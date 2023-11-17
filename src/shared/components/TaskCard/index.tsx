@@ -40,7 +40,9 @@ const TaskCard = ({
   status,
 }: TaskCardProps) => {
   const [wastedTime, setWastedTime] = useState<string>("00:00");
-  const [isStarted, setIsStarted] = useState<boolean>(false);
+  const [isStarted, setIsStarted] = useState<number>();
+
+  console.log();
 
   const startTask = async () => {
     const response = await axios.post(
@@ -61,19 +63,21 @@ const TaskCard = ({
   const handleStartTask = () => {
     setTime();
     startTask();
-    setIsStarted(true);
+    setIsStarted(taskNumber);
+    window.location.reload();
   };
 
   const handleStopTask = () => {
     stopTime();
     stopTask();
-    setIsStarted(false);
+    setIsStarted(undefined);
+    window.location.reload();
   };
 
   useEffect(() => {
     const startTime = getTime();
     if (startTime) {
-      setIsStarted(true);
+      setIsStarted(taskNumber);
       const currentTime = Date.now();
       const deltaHours = Math.floor(
         ((currentTime - startTime) / (1000 * 3600)) % 24
@@ -178,11 +182,16 @@ const TaskCard = ({
       >
         Чат с менеджером
       </Link>
-      {!isStarted && status === "закончено" ? (
-        <ConfirmDialog buttonText="Начать" onConfirmClick={handleStartTask} />
+      {status === "закончено" ? (
+        <ConfirmDialog
+          buttonText="Начать"
+          onConfirmClick={handleStartTask}
+          isDisabled={isStarted === taskNumber}
+        />
       ) : (
         <>
           <ConfirmDialog
+            isDisabled={false}
             buttonText={`Завершить (${wastedTime})`}
             onConfirmClick={handleStopTask}
           />
