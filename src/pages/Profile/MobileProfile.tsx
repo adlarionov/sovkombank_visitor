@@ -53,7 +53,7 @@ const TypographyTextStyled = styled(Typography)({
 });
 
 const getUserData: () => Promise<IWorker> = async () =>
-  await WorkersService.getWorkersById(getUser());
+  await WorkersService.getWorkersById(2);
 
 export default function MobileProfile() {
   const navigate = useNavigate();
