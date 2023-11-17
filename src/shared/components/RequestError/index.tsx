@@ -21,7 +21,7 @@ export default function RequestError({
         }
       >
         <AlertTitle>Ошибка запроса</AlertTitle>
-        {errorDescription}
+        {errorDescription.toString()}
       </Alert>
     </>
   );

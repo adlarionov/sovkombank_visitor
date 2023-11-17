@@ -133,17 +133,17 @@ const TaskCard = ({
       <Stack
         direction="row"
         sx={{
-          background: theme.palette.grey[300],
+          // background: theme.palette.grey[300],
           padding: "1rem",
           borderRadius: "0.5rem",
           minHeight: "6rem",
           marginRight: "0.5rem",
         }}
       >
-        <CommentIcon />
+        {/* <CommentIcon />
         <Typography sx={{ marginLeft: "0.5rem" }}>
           {comment ? comment : "Комментарий отсутсвует"}
-        </Typography>
+        </Typography> */}
       </Stack>
       <Link
         style={{

@@ -44,7 +44,6 @@ const TaskCorusel = ({ openTaskList }: { openTaskList: () => void }) => {
                       address={step.address}
                       time={step.time}
                       priority={step.priority}
-                      comment={step.comment}
                       openTaskList={openTaskList}
                     />
                   ) : null}

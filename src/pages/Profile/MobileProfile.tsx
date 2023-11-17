@@ -60,9 +60,11 @@ export default function MobileProfile() {
   const { data, error, mutate } = useSWR<IWorker>(getUser(), getUserData);
 
   if (error) {
-    console.error(error);
+    // console.error(error);
     return <RequestError errorDescription={error} reload={mutate} />;
   }
+
+  console.log(error);
 
   return (
     <ProfileLayoutMobile>

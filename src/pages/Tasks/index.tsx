@@ -25,6 +25,7 @@ import TaskCard from "../../shared/components/TaskCard";
 import { TabsList } from "../../shared/components/Tabs/TabList";
 import { Tab } from "../../shared/components/Tabs/Tab";
 import PointService from "../../shared/services/pointService";
+import { getDays } from "../../shared/hooks/getTime";
 
 const tasks = [
   {
@@ -117,6 +118,7 @@ export default function Tasks() {
   const [currentLocation, setCurrentLocation] = useState<number[]>([]);
 
   const [isFirstRoute, setIsFirstRoute] = useState<boolean>(true);
+  const days = getDays();
 
   const [ymaps, setYmaps] = useState<any>();
 
@@ -175,7 +177,7 @@ export default function Tasks() {
         referencePoints: [pointA, pointB],
         params: {
           routingMode: "auto",
-          avoidTrafficJams: true
+          avoidTrafficJams: true,
         },
       },
       {
@@ -252,8 +254,8 @@ export default function Tasks() {
         <StyledButtonGroup>
           <Tabs defaultValue={1}>
             <TabsList>
-              <Tab value={1}>Сегодня, 4 ноября</Tab>
-              <Tab value={2}>Завтра, 5 ноября</Tab>
+              <Tab value={1}>Сегодня, {days[0]} ноября</Tab>
+              <Tab value={2}>Завтра, {days[1]} ноября</Tab>
             </TabsList>
           </Tabs>
         </StyledButtonGroup>
@@ -289,7 +291,6 @@ export default function Tasks() {
                     address={step.address}
                     time={step.time}
                     priority={step.priority}
-                    comment={step.comment}
                     taskNumber={step.taskNumber}
                   />
                   <Divider sx={{ marginTop: "0.5rem" }} />

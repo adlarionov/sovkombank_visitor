@@ -11,3 +11,15 @@ export default interface ITask {
   start_datetime: string;
   finish_datetime: string;
 }
+
+export interface ITaskStatus {
+  planned: number;
+  finished: number;
+  not_finished: number;
+}
+
+export interface ITaskType {
+  departure_to_the_point: number;
+  training: number;
+  delivery: number;
+}

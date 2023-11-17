@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck TODO
+// @ ts-nocheck TODO
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Button, Stack, styled } from "@mui/material";
@@ -11,6 +11,7 @@ import { theme } from "../../app/providers/ThemeProvider/theme";
 
 import FiberManualRecordRoundedIcon from "@mui/icons-material/FiberManualRecordRounded";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
+import getTime from "../../shared/hooks/getTime";
 
 const StyledTypography = styled(Typography)({
   ...typographyDesktop.h1,
@@ -42,10 +43,12 @@ const data = [
 ];
 
 const DashboardPage = () => {
+  const today = getTime();
+
   return (
     <Box>
       <Stack direction="row" justifyContent={"space-between"}>
-        <StyledTypography>Дашборд</StyledTypography>{" "}
+        <StyledTypography>Дашборд</StyledTypography>
         <Button
           sx={{
             background: theme.palette.primary.main,
@@ -60,21 +63,17 @@ const DashboardPage = () => {
       </Stack>
       <DashboardContent>
         <GridBoxRow1>
-          <DashboardCard
-            title="Задач запланировано"
-            count={7}
-            date="07.11.23"
-          />
+          <DashboardCard title="Задач запланировано" count={7} date={today} />
           <DashboardCard
             title="Задачи выполнено"
             count={2}
-            date="07.11.23"
+            date={today}
             color="#2F9461"
           />
           <DashboardCard
             title="Задач не выполнено"
             count={5}
-            date="07.11.23"
+            date={today}
             color="#CD3636"
           />
         </GridBoxRow1>
