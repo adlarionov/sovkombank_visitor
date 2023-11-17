@@ -96,7 +96,7 @@ export default function DesktopLogin() {
         window.location.reload();
         localStorage.setItem("userId", resp.id.toString());
       })
-      .catch((error) => alert(error));
+      .catch((error) => console.error(error));
   };
   
 

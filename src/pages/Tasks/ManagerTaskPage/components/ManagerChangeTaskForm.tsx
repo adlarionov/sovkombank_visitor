@@ -61,7 +61,6 @@ export default function ManagerChangeTaskForm({
     },
     onSubmit: (values, { resetForm }) => {
       onSubmitForm(values);
-      alert(JSON.stringify(values, null, 2));
       navigate("/manager/tasks");
       resetForm();
     },
