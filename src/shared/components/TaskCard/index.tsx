@@ -182,7 +182,7 @@ const TaskCard = ({
       >
         Чат с менеджером
       </Link>
-      {status === "закончено" ? (
+      {status === "закончено" || status === "назначено" ? (
         <ConfirmDialog
           buttonText="Начать"
           onConfirmClick={handleStartTask}
