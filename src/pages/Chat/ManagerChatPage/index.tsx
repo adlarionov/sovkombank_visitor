@@ -48,7 +48,7 @@ const ManagerChatPage = () => {
       <Stack height={"81vh"} direction={"row"}>
         <Box width="100%" borderRight={"1px solid rgba(0, 0, 0, 0.12) "}>
           <List sx={{ width: "100%", padding: 0 }}>
-            <ListItem onClick={() => navigate("/manager/chats/0")}>
+            <ListItem onClick={() => navigate("/managerr/chats/0")}>
               <ListItemAvatar>
                 <Avatar sx={{ background: theme.palette.common.white }}>
                   <Box
@@ -73,7 +73,7 @@ const ManagerChatPage = () => {
               />
             </ListItem>
             <Divider />
-            <ListItem onClick={() => navigate("/manager/chats/1")}>
+            <ListItem onClick={() => navigate("/managerr/chats/1")}>
               <ListItemAvatar>
                 <Avatar sx={{ background: theme.palette.common.white }}>
                   <Box
@@ -98,7 +98,7 @@ const ManagerChatPage = () => {
               />
             </ListItem>
             <Divider />
-            <ListItem onClick={() => navigate("/manager/chats/2")}>
+            <ListItem onClick={() => navigate("/managerr/chats/2")}>
               <ListItemAvatar>
                 <Avatar sx={{ background: theme.palette.common.white }}>
                   <Box

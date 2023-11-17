@@ -141,27 +141,27 @@ export default function DesktopRootLayout() {
             >
               <Box>
                 {/* @ts-ignore */}
-                <ListItemButton component={Link} to={"/manager/dashboard"}>
+                <ListItemButton component={Link} to={"/managerr/dashboard"}>
                   <ListItemIcon>{<DashboarIcon />}</ListItemIcon>
                   <ListItemText primary={"Дашборд"} />
                 </ListItemButton>
                 {/*@ts-ignore */}
-                <ListItemButton component={Link} to={"/manager/tasks"}>
+                <ListItemButton component={Link} to={"/managerr/tasks"}>
                   <ListItemIcon>{<TaskIcon />}</ListItemIcon>
                   <ListItemText primary={"Задачи"} />
                 </ListItemButton>
                 {/*@ts-ignore */}
-                <ListItemButton component={Link} to={"/manager/chats"}>
+                <ListItemButton component={Link} to={"/managerr/chats"}>
                   <ListItemIcon>{<ChatIcon />}</ListItemIcon>
                   <ListItemText primary={"Чат"} />
                 </ListItemButton>
                 {/*@ts-ignore */}
-                <ListItemButton component={Link} to={"/manager/departments"}>
+                <ListItemButton component={Link} to={"/managerr/departments"}>
                   <ListItemIcon>{<DepartmentIcon />}</ListItemIcon>
                   <ListItemText primary={"Отделения"} />
                 </ListItemButton>
                 {/*@ts-ignore */}
-                <ListItemButton component={Link} to={"/manager/employees"}>
+                <ListItemButton component={Link} to={"/managerr/employees"}>
                   <ListItemIcon>{<EmployeeIcon />}</ListItemIcon>
                   <ListItemText primary={"Сотрудники"} />
                 </ListItemButton>

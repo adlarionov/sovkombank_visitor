@@ -17,7 +17,7 @@ export default function RootLayout() {
   useEffect(() => {
     permissionRole === "visitor"
       ? navigate("/tasks")
-      : navigate("/manager/dashboard");
+      : navigate("/managerr/dashboard");
 
     console.log(permissionRole);
   }, []);

@@ -78,14 +78,14 @@ export default function DepartmentChangeForm({
     onSubmit: async (values, { resetForm }) => {
       type === "create" ? createDepartment(values) : updateDepartment(values);
       onSubmitForm(values);
-      navigate("/manager/departments");
+      navigate("/managerr/departments");
       resetForm();
     },
   });
 
   return (
     <Box>
-      <StyledButton onClick={() => navigate("/manager/departments")}>
+      <StyledButton onClick={() => navigate("/managerr/departments")}>
         <ChevronLeftRoundedIcon />
       </StyledButton>
       <TypographyH1Desktop

@@ -61,14 +61,14 @@ export default function ManagerChangeTaskForm({
     },
     onSubmit: (values, { resetForm }) => {
       onSubmitForm(values);
-      navigate("/manager/tasks");
+      navigate("/managerr/tasks");
       resetForm();
     },
   });
 
   return (
     <Box>
-      <StyledButton onClick={() => navigate("/manager/tasks")}>
+      <StyledButton onClick={() => navigate("/managerr/tasks")}>
         <ChevronLeftRoundedIcon />
       </StyledButton>
       <TypographyH1Desktop

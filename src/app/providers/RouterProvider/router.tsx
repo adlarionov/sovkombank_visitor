@@ -53,27 +53,27 @@ export const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/manager/dashboard",
+        path: "/managerr/dashboard",
         element: <DashboardPage />,
       },
       {
-        path: "/manager/tasks",
+        path: "/managerr/tasks",
         element: <ManagerTaskPage />,
       },
       {
-        path: "/manager/chats",
+        path: "/managerr/chats",
         element: <ManagerChatPage />,
       },
       {
-        path: "/manager/chats/:chatId",
+        path: "/managerr/chats/:chatId",
         element: <ManagerChatPage />,
       },
       {
-        path: "/manager/departments",
+        path: "/managerr/departments",
         element: <DepartmentsPage />,
       },
       {
-        path: "/manager/employees",
+        path: "/managerr/employees",
         element: <EmployeePage />,
       },
     ],

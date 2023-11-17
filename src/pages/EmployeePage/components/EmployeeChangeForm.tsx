@@ -59,14 +59,14 @@ export default function EmployeeChangeForm({
     },
     onSubmit: (values, { resetForm }) => {
       onSubmitForm(values);
-      navigate("/manager/employees");
+      navigate("/managerr/employees");
       resetForm();
     },
   });
 
   return (
     <Box>
-      <StyledButton onClick={() => navigate("/manager/employees")}>
+      <StyledButton onClick={() => navigate("/managerr/employees")}>
         <ChevronLeftRoundedIcon />
       </StyledButton>
       <TypographyH1Desktop

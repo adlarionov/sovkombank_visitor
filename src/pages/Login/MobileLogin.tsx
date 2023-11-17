@@ -103,7 +103,7 @@ export default function MobileLogin() {
         setUserId(resp.id.toString());
         setUser(resp.id);
         if (permission === "manager") {
-          navigate("/manager/dashboard");
+          navigate("/managerr/dashboard");
         } else {
           navigate("/tasks");
         }

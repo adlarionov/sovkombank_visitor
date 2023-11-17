@@ -89,7 +89,7 @@ export default function DesktopLogin() {
     await LoginService.login(email, password)
       .then((resp) => {
         if (permission === "manager") {
-          navigate("/manager/dashboard");
+          navigate("/managerr/dashboard");
         } else {
           navigate("/tasks");
         }
@@ -111,7 +111,7 @@ export default function DesktopLogin() {
       resetForm();
       fetchData(values);
       if (permission === "manager") {
-        navigate("/manager/dashboard");
+        navigate("/managerr/dashboard");
       } else {
         navigate("/tasks");
       }
@@ -133,7 +133,7 @@ export default function DesktopLogin() {
   useEffect(() => {
     if (isAuthrized) {
       if (permission === "manager") {
-        navigate("/manager/dashboard");
+        navigate("/managerr/dashboard");
       } else {
         navigate("/tasks");
       }
